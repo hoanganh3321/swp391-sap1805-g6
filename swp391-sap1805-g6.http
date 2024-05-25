@@ -1,0 +1,6 @@
+@swp391_sap1805_g6_HostAddress = http://localhost:5252
+
+GET {{swp391_sap1805_g6_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
