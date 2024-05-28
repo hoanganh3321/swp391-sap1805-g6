@@ -1,5 +1,4 @@
 import React from 'react';
-import Navbar from '../../components/navbar/index';
 import Footer from '../../components/footer/FooterHomePage';
 import Banner from '../../components/banner/Banner';
 import Products from '../../components/products/Products';
@@ -25,7 +24,6 @@ const Home = () => {
 
     return (
         <div className="duration-200 bg-white dark:bg-gray-900 dark:text-white">
-            <Navbar handleOrderPopup={handleOrderPopup}/>
             <Hero/>
             <Banner handleOrderPopup={handleOrderPopup}/>
             <Products />
