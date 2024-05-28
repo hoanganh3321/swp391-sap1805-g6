@@ -51,7 +51,7 @@ const TopProducts = ({ handleOrderPopup }) => {
               data-aos="zoom-in"
               className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group max-w-[300px]"
             >
-             
+     
               <div className="h-[100px]">
                 <img
                   src={data.img}
@@ -59,7 +59,6 @@ const TopProducts = ({ handleOrderPopup }) => {
                   className="max-w-[140px] block mx-auto transform -translate-y-20 group-hover:scale-105 duration-300 drop-shadow-md"
                 />
               </div>
-              {/* details section */}
               <div className="p-4 text-center">
                
                 <div className="flex items-center justify-center w-full gap-1">
