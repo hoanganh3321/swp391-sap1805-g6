@@ -4,6 +4,9 @@ import Banner from '../../components/banner/Banner';
 import Products from '../../components/products/Products';
 import TopProducts from '../../components/products/TopProduct';
 import Hero from '../../components/banner/Hero';
+import Navbar from '../navbar/Navbar';
+import Features from '../banner/Feature';
+import Blog from '../../components/banner/Blog';
 import AOS from "aos";
 
 const Home = () => {
@@ -24,9 +27,12 @@ const Home = () => {
 
     return (
         <div className="duration-200 bg-white dark:bg-gray-900 dark:text-white">
+            <Navbar/>
             <Hero/>
             <Banner handleOrderPopup={handleOrderPopup}/>
             <Products />
+            <Blog/>
+            <Features/>
             <TopProducts handleOrderPopup={handleOrderPopup}/>
             <Footer />
         </div>
