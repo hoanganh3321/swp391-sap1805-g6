@@ -65,12 +65,12 @@ export const columnsDataGemstone = [
     accessor: "weight",
   },
   {
-    Header: "SIZE",
-    accessor: "size",
+    Header: "PRICE",
+    accessor: "price",
   },
   {
-    Header: "DATE",
-    accessor: "createdAt",
+    Header: "QUANTITY",
+    accessor: "quantity",
   },
 ];
 

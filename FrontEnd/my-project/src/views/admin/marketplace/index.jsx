@@ -1,11 +1,3 @@
-import NFt2 from "../../../assets/img/nfts/Nft2.png";
-import NFt4 from "../../../assets/img/nfts/Nft4.png";
-import NFt3 from "../../../assets/img/nfts/Nft3.png";
-// import NFt5 from "../../../assets/img/nfts/Nft5.png";
-// import NFt6 from "../../../assets/img/nfts/Nft6.png";
-import avatar1 from "../../../assets/img/avatars/avatar1.png";
-import avatar2 from "../../../assets/img/avatars/avatar2.png";
-import avatar3 from "../../../assets/img/avatars/avatar3.png";
 import { useEffect, useState } from "react";
 import tableDataTopCreators from "./variables/tableDataTopCreators.json";
 import { tableColumnsTopCreators } from "./variables/tableColumnsTopCreators";
@@ -15,13 +7,13 @@ import NftCard from "../../../components/card/NftCard";
 import axios from "axios";
 
 const Marketplace = () => {
-  const [products, setProducts] = useState([]);
+  const [ListProduct, setListProduct] = useState([]);
   
   useEffect(() => {
     axios
       .get("https://localhost:7002/api/product/list")
       .then((response) => {
-        setProducts(response.data);
+        setListProduct(response.data);
       })
       .catch((error) => {
         console.error(error);
@@ -76,28 +68,17 @@ const Marketplace = () => {
 
         {/* NFTs trending card */}
         <div className="z-20 grid grid-cols-1 gap-5 md:grid-cols-3">
-          <NftCard
-            bidders={[avatar1, avatar2, avatar3]}
-            title="Abstract Colors"
-            author="Esthera Jackson"
-            price="0.91"
-            image={NFt3}
-          />
-          <NftCard
-            bidders={[avatar1, avatar2, avatar3]}
-            title="ETH AI Brain"
-            author="Nick Wilson"
-            price="0.7"
-            image={NFt2}
-          />
-          <NftCard
-            bidders={[avatar1, avatar2, avatar3]}
-            title="Mesh Gradients"
-            author="Will Smith"
-            price="2.91"
-            image={NFt4}
-          />
+          {ListProduct.map((list, index) => (
+            <NftCard
+              index={index}
+              name={list?.productName}
+              categoryID={list?.productId}
+              price={list?.price}
+              image={list?.image}
+            />
+          ))}
         </div>
+        
 
         {/* Recenlty Added setion */}
         {/* <div className="mb-5 mt-5 flex items-center justify-between px-[26px]">

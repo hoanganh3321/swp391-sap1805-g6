@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from "react";
-import CardMenu from "../../../../components/card/CardMenu";
 import Card from "../../../../components/card";
 import Checkbox from "../../../../components/checkbox";
 import {
@@ -57,7 +56,6 @@ const CheckTable = (props) => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
         />
-        <CardMenu />
       </header>
 
       <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
@@ -92,31 +90,31 @@ const CheckTable = (props) => {
                 <tr {...row.getRowProps()} key={index}>
                   {row.cells.map((cell, index) => {
                     let data = "";
-                    if (cell.column.Header === "NAME") {
+                    if (cell.column.Header === "Product Name") {
                       data = (
                         <div className="flex items-center gap-2">
                           <Checkbox />
                           <p className="text-sm font-bold text-navy-700 dark:text-white">
-                            {cell.value[0]}
+                          {cell.value}{" "}
                           </p>
                         </div>
                       );
-                    } else if (cell.column.Header === "PROGRESS") {
+                    } else if (cell.column.Header === "Weight") {
                       data = (
                         <div className="flex items-center">
                           <p className="text-sm font-bold text-navy-700 dark:text-white">
-                            {cell.value}%
+                            {cell.value}
                           </p>
                         </div>
                       );
-                    } else if (cell.column.Header === "QUANTITY") {
+                    } else if (cell.column.Header === "Price") {
                       data = (
                         <p className="text-sm font-bold text-navy-700 dark:text-white">
                           {" "}
                           {cell.value}{" "}
                         </p>
                       );
-                    } else if (cell.column.Header === "DATE") {
+                    } else if (cell.column.Header === "Quantity") {
                       data = (
                         <p className="text-sm font-bold text-navy-700 dark:text-white">
                           {cell.value}
