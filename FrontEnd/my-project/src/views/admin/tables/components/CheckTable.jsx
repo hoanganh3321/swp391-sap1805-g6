@@ -40,23 +40,24 @@ const CheckTable = (props) => {
   initialState.pageSize = 11;
 
   const handleSearch = async () => {
-    if (searchId.trim() !== "") {
-      try {
-        const response = await fetch(
-          `https://localhost:7002/api/product/search/${searchId}`
-        );
-        if (!response.ok) {
-          throw new Error("Product not found");
-        }
-        const result = await response.json();
-        setData([result]); // Assuming the API returns a single product object
-        setErrorMessage(""); // Clear any previous error messages
-      } catch (error) {
-        setErrorMessage(error.message);
-      }
-    } else {
-      setErrorMessage("Please enter a valid ID");
+    if (searchId.trim() === "") {
       setData(tableData); // Reset to original table data if search input is cleared
+      setErrorMessage(""); // Clear any previous error messages
+      return; // Exit the function if search ID is empty
+    }
+
+    try {
+      const response = await fetch(
+        `https://localhost:7002/api/product/search/${searchId}`
+      );
+      if (!response.ok) {
+        throw new Error("Product not found");
+      }
+      const result = await response.json();
+      setData([result]); // Assuming the API returns a single product object
+      setErrorMessage(""); // Clear any previous error messages on successful search
+    } catch (error) {
+      setErrorMessage(error.message);
     }
   };
 
@@ -97,7 +98,10 @@ const CheckTable = (props) => {
       </header>
 
       {errorMessage && (
-        <ErrorModal message={errorMessage} onClose={() => setErrorMessage("")} />
+        <ErrorModal
+          message={errorMessage}
+          onClose={() => setErrorMessage("")}
+        />
       )}
 
       <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
