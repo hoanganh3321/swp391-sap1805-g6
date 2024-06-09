@@ -166,6 +166,17 @@ const CheckTable = (props) => {
                           {cell.value}
                         </p>
                       );
+                    } else if (cell.column.Header === "Actions") {
+                      data = (
+                        <div>
+                          <button className="px-3 py-1 mr-2 text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                            Edit
+                          </button>
+                          <button className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                            Delete
+                          </button>
+                        </div>
+                      );
                     }
                     return (
                       <td
