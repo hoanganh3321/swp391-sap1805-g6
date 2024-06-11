@@ -1,33 +1,26 @@
-import React from "react";
-import Img1 from "../../assets/img/topProduct/shirt.png";
-import Img2 from "../../assets/img/topProduct/shirt2.png";
-import Img3 from "../../assets/img/topProduct/shirt3.png";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 
-const ProductsData = [
-  {
-    id: 1,
-    img: Img1,
-    title: "Casual Wear",
-    description:
-      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    id: 2,
-    img: Img2,
-    title: "Printed shirt",
-    description:
-      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    id: 3,
-    img: Img3,
-    title: "Women shirt",
-    description:
-      "lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-];
+
 const TopProducts = ({ handleOrderPopup }) => {
+  const [topProducts, setTopProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('https://localhost:7002/api/product/list');
+        const data = await response.json();
+
+        // Sort products by stoneCost in descending order and select the top 3
+        const sortedProducts = data.sort((a, b) => b.stoneCost - a.stoneCost);
+        setTopProducts(sortedProducts.slice(0, 3));
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
   return (
     <div>
       <div className="container">
@@ -45,34 +38,30 @@ const TopProducts = ({ handleOrderPopup }) => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 gap-20 sm:grid-cols-2 md:grid-cols-3 md:gap-5 place-items-center">
-          {ProductsData.map((data) => (
+        <div className="grid grid-cols-1 gap-20 mb-10 sm:grid-cols-2 md:grid-cols-3 md:gap-5 place-items-center">
+          {topProducts.map((product) => (
             <div
+              key={product.id}
               data-aos="zoom-in"
-              className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group max-w-[300px]"
+              className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group max-w-[350px]" // Increase max-width
             >
-     
-              <div className="h-[100px]">
+              <div className="h-[150px]"> {/* Increase height */}
                 <img
-                  src={data.img}
-                  alt=""
-                  className="max-w-[140px] block mx-auto transform -translate-y-20 group-hover:scale-105 duration-300 drop-shadow-md"
+                  src={product.image}
+                  alt={product.productName}
+                  className="max-w-[180px] block mx-auto transform -translate-y-20 group-hover:scale-105 duration-300 drop-shadow-md" // Increase image size
                 />
               </div>
-              <div className="p-4 text-center">
-               
+              <div className="p-6 text-center"> {/* Increase padding */}
                 <div className="flex items-center justify-center w-full gap-1">
                   <FaStar className="text-yellow-500" />
                   <FaStar className="text-yellow-500" />
                   <FaStar className="text-yellow-500" />
                   <FaStar className="text-yellow-500" />
                 </div>
-                <h1 className="text-xl font-bold ">{data.title}</h1>
-                <p className="text-sm text-gray-500 duration-300 group-hover:text-bloom line-clamp-2">
-                  {data.description}
-                </p>
+                <h1 className="text-xl font-bold ">{product.productName}</h1>
                 <button
-                  className="px-4 py-1 mt-4 duration-300 rounded-full text-hemp bg-primary hover:scale-105 group-hover:bg-bloom group-hover:text-primary"
+                  className="px-6 py-2 mt-4 duration-300 rounded-full text-hemp bg-primary hover:scale-105 group-hover:bg-bloom group-hover:text-primary" // Increase button size
                   onClick={handleOrderPopup}
                 >
                   Order Now

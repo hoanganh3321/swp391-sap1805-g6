@@ -72,7 +72,7 @@ const Marketplace = () => {
             <NftCard
               index={index}
               name={list?.productName}
-              categoryID={list?.productId}
+              categoryID={list?.categoryId}
               price={list?.price}
               image={list?.image}
             />

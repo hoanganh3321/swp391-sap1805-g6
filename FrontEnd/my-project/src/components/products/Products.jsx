@@ -1,54 +1,21 @@
-import React from "react";
-import Img1 from "../../assets/img/products/women.png";
-import Img2 from "../../assets/img/products/women2.jpg";
-import Img3 from "../../assets/img/products/women3.jpg";
-import Img4 from "../../assets/img/products/women4.jpg";
-import { FaStar } from "react-icons/fa6";
-
-const ProductsData = [
-  {
-    id: 1,
-    img: Img1,
-    title: "Women Ethnic",
-    rating: 5.0,
-    color: "white",
-    aosDelay: "0",
-  },
-  {
-    id: 2,
-    img: Img2,
-    title: "Women western",
-    rating: 4.5,
-    color: "Red",
-    aosDelay: "200",
-  },
-  {
-    id: 3,
-    img: Img3,
-    title: "Goggles",
-    rating: 4.7,
-    color: "brown",
-    aosDelay: "400",
-  },
-  {
-    id: 4,
-    img: Img4,
-    title: "Printed T-Shirt",
-    rating: 4.4,
-    color: "Yellow",
-    aosDelay: "600",
-  },
-  {
-    id: 5,
-    img: Img2,
-    title: "Fashin T-Shirt",
-    rating: 4.5,
-    color: "Pink",
-    aosDelay: "800",
-  },
-];
+import React, { useEffect, useState } from "react";
 
 const Products = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('https://localhost:7002/api/product/list');
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   return (
     <div className="mb-12 mt-14">
       <div className="container">
@@ -67,26 +34,24 @@ const Products = () => {
         </div>
         <div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 place-items-center">
-           
-            {ProductsData.map((data) => (
+            {products.map((product, index) => (
               <div
                 data-aos="fade-up"
-                data-aos-delay={data.aosDelay}
-                key={data.id}
+                data-aos-delay={index * 200}
+                key={product.productId}
                 className="space-y-3"
               >
-                <img
-                  src={data.img}
-                  alt=""
-                  className="h-[220px] w-[150px] object-cover rounded-md"
-                />
+                <div className="h-[260px] w-[260px] overflow-hidden rounded-md">
+                  <img
+                    src={product.image}
+                    alt={product.productName}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
                 <div>
-                  <h3 className="font-semibold">{data.title}</h3>
-                  <p className="text-sm text-gray-600">{data.color}</p>
-                  <div className="flex items-center gap-1">
-                    <FaStar className="text-yellow-400" />
-                    <span>{data.rating}</span>
-                  </div>
+                  <h3 className="font-semibold">{product.productName}</h3>
+                  <p className="text-sm text-gray-600">Price: ${product.price}</p>
+                  <p className="text-sm text-gray-600">Stone Cost: ${product.stoneCost}</p>
                 </div>
               </div>
             ))}
