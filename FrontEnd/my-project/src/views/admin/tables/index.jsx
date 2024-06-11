@@ -83,7 +83,7 @@ const Tables = () => {
       <div className="grid h-full grid-cols-1 gap-5 mt-5">
         <CheckTable columnsData={columnsDataGemstone} tableData={tableData} />
       </div>
-      {isEditOpen && editData && ( // Kiểm tra nếu đang mở bảng popup và có dữ liệu chỉnh sửa
+      {isEditOpen && editData && (
         <EditPopup
           data={editData}
           onSave={(newData) => handleSaveEdit(editData.id, newData)}
