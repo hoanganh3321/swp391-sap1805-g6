@@ -16,7 +16,7 @@ const Signup = () => {
                             <div data-aos="fade-up" className="flex items-center">
                                 <p>First name</p>
                             </div>
-                            <input type="email" className="border border-gray-800 rounded-full h-10" />
+                            <input type="text" className="border border-gray-800 rounded-full h-10" />
 
 
                         </div>
@@ -24,7 +24,7 @@ const Signup = () => {
                             <div data-aos="fade-up" className="flex item-center">
                                 <p>Last name</p>
                             </div>
-                            <input type="password" className="border border-gray-800 rounded-full h-10" />
+                            <input type="text" className="border border-gray-800 rounded-full h-10" />
                         </div>
 
                         <div className="flex flex-col gap-4">

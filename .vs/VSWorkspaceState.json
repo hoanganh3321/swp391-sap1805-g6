@@ -3,8 +3,13 @@
     "",
     "\\BackEnd",
     "\\BackEnd\\Controllers",
-    "\\BackEnd\\Entities"
+    "\\BackEnd\\Entities",
+    "\\BackEnd\\Properties",
+    "\\BackEnd\\Reporitories",
+    "\\BackEnd\\Validations",
+    "\\FrontEnd",
+    "\\FrontEnd\\my-project"
   ],
-  "SelectedNode": "\\BackEnd\\Entities\\Admin.cs",
+  "SelectedNode": "\\BackEnd\\Controllers\\CustomerControllers.cs",
   "PreviewInSolutionExplorer": false
 }
