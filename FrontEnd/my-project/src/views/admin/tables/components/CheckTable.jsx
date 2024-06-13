@@ -54,8 +54,8 @@ const CheckTable = (props) => {
         throw new Error("Product not found");
       }
       const result = await response.json();
-      setData([result]); // Assuming the API returns a single product object
-      setErrorMessage(""); // Clear any previous error messages on successful search
+      setData([result]); 
+      setErrorMessage("");
     } catch (error) {
       setErrorMessage(error.message);
     }
@@ -84,7 +84,14 @@ const CheckTable = (props) => {
           </button>
           <button
             type="button"
-            class="rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-3 py-2.5 text-center text-sm font-medium text-white me-2 hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
+            className="rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-3 py-2.5 text-center text-sm font-medium text-white me-2 hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
+            onClick={handleSearch}
+          >
+            Search
+          </button>
+          <button
+            type="button"
+            className="rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-3 py-2.5 text-center text-sm font-medium text-white me-2 hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
             onClick={() => setIsModalOpen(true)}
           >
             Add Product
