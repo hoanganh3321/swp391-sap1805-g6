@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using BackEnd.Models;
 
 namespace BackEnd.Filters
 {
@@ -52,8 +53,8 @@ namespace BackEnd.Filters
                         return;
                     }
 
-                    var adminId = int.Parse(jwtToken.Claims.First().Value);
-                    context.HttpContext.Items["adminId"] = adminId;
+                    var AdminID = int.Parse(jwtToken.Claims.First().Value);
+                    context.HttpContext.Items["AdminID"] = AdminID;
                 }
                 catch
                 {

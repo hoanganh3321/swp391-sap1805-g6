@@ -35,7 +35,7 @@ builder.Services.AddDbContext<Banhang3Context>(options =>
 );
 
 
-// Repo, service
+// Đăng ký Repo, service
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 //
@@ -58,8 +58,16 @@ builder.Services.AddScoped<ILoyalPointService, LoyalPointService>();
 //
 builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
-
-// Đăng ký Jwt
+//
+builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
+builder.Services.AddScoped<IPromotionService, PromotionService>();
+//
+builder.Services.AddScoped<IProductReturnService, ProductReturnService>();
+builder.Services.AddScoped<IProductReturnRepository, ProductReturnRepository>();
+//
+builder.Services.AddScoped<IGoldPriceDisplayRepository, GoldPriceDisplayRepository>();
+builder.Services.AddScoped<IGoldPriceDisplayService, GoldPriceDisplayService>();
+// Đăng ký filter 
 builder.Services.AddScoped<JwtAuthorizationFilter>();
 builder.Services.AddScoped<AdminAuthorizationFilter>();
 builder.Services.AddScoped<StaffAuthorizerFilter>();
