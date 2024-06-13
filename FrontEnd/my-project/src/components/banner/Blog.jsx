@@ -1,5 +1,5 @@
 import React from 'react';
-import Blog from '../../assets/img/banner/blog.png';
+import BlogHomePage from '../../assets/img/banner/blog.png';
 
 const App = () => {
   return (
@@ -14,10 +14,10 @@ const App = () => {
           dream it, we can make it happen and still exceed your expectations. We're your personal jewelry
           concierge intent on putting the magic back into moments.
         </p>
-        <button className="px-4 py-2 mt-5 text-white bg-bloom">Learn More</button>
+        <button className="px-4 py-2 mt-5 text-hemp bg-bloom">Learn More</button>
       </div>
       <div className="relative w-1/2 right-content">
-        <img src={Blog} alt="Woman with diamonds" className="w-full h-auto" />
+        <img src={BlogHomePage} alt="Woman with diamonds" className="w-full h-auto" />
       </div>
     </div>
   );

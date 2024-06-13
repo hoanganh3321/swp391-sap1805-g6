@@ -4,7 +4,6 @@ import React from "react";
 import MainDashboard from "./views/admin/default";
 import NFTMarketplace from "./views/admin/marketplace";
 import Profile from "./views/admin/profile";
-// import Create from "./components/atom/Create/Create";
 import DataTables from "./views/admin/tables";
 
 // // Auth Imports
@@ -70,13 +69,5 @@ const routes = [
     icon: <MdPerson className="w-6 h-6" />,
     component: <Profile />,
   },
-  {
-    name: "Sign In",
-    layout: "/auth",
-    path: "sign-in",
-    icon: <MdLock className="w-6 h-6" />,
-    component: <MainDashboard />,
-  },
-  
 ];
 export default routes;
