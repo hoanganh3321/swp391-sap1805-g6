@@ -21,13 +21,13 @@ public class CustomerRepository : ICustomerRepository
 
     public async Task<Customer?> AddCustomerAsync(Customer customer)
     {
-     
+
         _context.Customers.Add(customer);
         await _context.SaveChangesAsync();
         return customer;
     }
 
-    public async Task<Customer?> GetCustomerById(int customerId)
+    public async Task<Customer?> GetCustomerByIdAsync(int customerId)
     {
         return await _context.Customers.FirstOrDefaultAsync(c => c.CustomerId == customerId);
     }
@@ -76,6 +76,18 @@ public class CustomerRepository : ICustomerRepository
     public async Task<Customer?> GetCustomerByPhoneNumberAsync(string PhoneNumber)
     {
         return await _context.Customers.FirstOrDefaultAsync(c => c.PhoneNumber == PhoneNumber);
+    }
+    public async Task<LoyaltyPoint?> GetCustomerLoyalPointByCustomerId1(int? customerId)
+    {
+        var customer = await _context.Customers
+       .Include(c => c.LoyaltyPoints)
+       .FirstOrDefaultAsync(c => c.CustomerId == customerId);
+
+        if (customer == null || !customer.LoyaltyPoints.Any())
+        {
+            return null;
+        }
+        return customer.LoyaltyPoints.FirstOrDefault();
     }
 }
 

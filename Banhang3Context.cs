@@ -51,7 +51,7 @@ public partial class Banhang3Context : DbContext
 
     public virtual DbSet<Promotion> Promotions { get; set; }
 
-    public virtual DbSet<ReturnPolicy> ReturnPolicies { get; set; }
+    public virtual DbSet<ReturnPolicy> ReturnPolicy { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
 
@@ -135,7 +135,7 @@ public partial class Banhang3Context : DbContext
 
         modelBuilder.Entity<Invoice>(entity =>
         {
-            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__D796AAD51AEC0857");
+            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__D796AAD58D8660CE");
 
             entity.ToTable("Invoice");
 
@@ -144,6 +144,7 @@ public partial class Banhang3Context : DbContext
             entity.Property(e => e.InvoiceId).HasColumnName("InvoiceID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.PromotionId).HasColumnName("PromotionID");
+            entity.Property(e => e.PromotionName).HasMaxLength(255);
             entity.Property(e => e.TotalPrice).HasColumnType("decimal(18, 2)");
 
             entity.HasOne(d => d.Order).WithOne(p => p.Invoice)
@@ -259,22 +260,23 @@ public partial class Banhang3Context : DbContext
 
         modelBuilder.Entity<Promotion>(entity =>
         {
-            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__52C42F2F74DB7169");
+            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__52C42F2F2F12ED4D");
 
             entity.ToTable("Promotion");
 
             entity.Property(e => e.PromotionId).HasColumnName("PromotionID");
             entity.Property(e => e.Approved).HasDefaultValue(false);
-            entity.Property(e => e.ApprovedBy)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("Approved_By");
+            entity.Property(e => e.ApprovedBy).HasColumnName("Approved_By");
             entity.Property(e => e.Discount).HasColumnType("decimal(5, 2)");
             entity.Property(e => e.EndDate).HasColumnName("End_Date");
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.StartDate).HasColumnName("Start_Date");
+
+            entity.HasOne(d => d.ApprovedByNavigation).WithMany(p => p.Promotions)
+                .HasForeignKey(d => d.ApprovedBy)
+                .HasConstraintName("FK_Promotion_Approved_By");
         });
 
         modelBuilder.Entity<ReturnPolicy>(entity =>

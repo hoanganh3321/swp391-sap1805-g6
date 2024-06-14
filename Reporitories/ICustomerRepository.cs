@@ -17,7 +17,8 @@ namespace BackEnd.Reporitories
         Task<Customer> UpdateCustomerAsync(Customer customer);
         
         Task DeleteCustomerAsync(int customerId);
-        Task<Customer?> GetCustomerById(int customerId);
+        Task<Customer?> GetCustomerByIdAsync(int customerId);
+        Task<LoyaltyPoint?> GetCustomerLoyalPointByCustomerId1(int? customerId);
     }
 
 }

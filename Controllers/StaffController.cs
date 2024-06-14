@@ -37,5 +37,8 @@ namespace BackEnd.Controllers
             await _staffService.LogoutAsync();
             return Ok("Logged out successfully");
         }
+
+
+
     }
 }

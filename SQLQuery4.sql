@@ -160,8 +160,10 @@ CREATE TABLE Promotion (
   End_Date DATE,
   Discount DECIMAL(5, 2),
   Approved BIT DEFAULT 0,  
-  Approved_By VARCHAR(255),
+  Approved_By int
+  CONSTRAINT FK_Promotion_Approved_By FOREIGN KEY (Approved_By) REFERENCES [Admin](AdminID)
 );
+drop table Promotion
 CREATE TABLE ReturnPolicy (
   PolicyID INT PRIMARY KEY IDENTITY(1,1),
   [Description] VARCHAR(255),
@@ -203,13 +205,25 @@ CREATE TABLE GoldPriceDisplay (
     GoldPrice DECIMAL(10, 2) NOT NULL,
     LastUpdated DATETIME NOT NULL
 );
+drop table GoldPriceDisplay
+-- Tạo bảng Invoice
+CREATE TABLE Invoice (
+    InvoiceID INT PRIMARY KEY IDENTITY(1,1), -- Khóa chính, tự tăng
+    OrderID INT, -- Khóa ngoại liên kết với bảng Order
+    PromotionID INT, -- Khóa ngoại liên kết với bảng Promotion
+    PromotionName NVARCHAR(255), -- Tên của khuyến mãi
+    TotalPrice DECIMAL(18, 2), -- Tổng giá của hóa đơn
+    CONSTRAINT FK_Invoice_Order FOREIGN KEY (OrderID) REFERENCES [Order](OrderID), -- Ràng buộc khóa ngoại đến bảng Order
+    CONSTRAINT FK_Invoice_Promotion FOREIGN KEY (PromotionID) REFERENCES Promotion(PromotionID) -- Ràng buộc khóa ngoại đến bảng Promotion
+);
+ALTER TABLE Invoice
+ADD CONSTRAINT UQ_Invoice_OrderID UNIQUE (OrderID);
+drop table Invoice
+
+
 INSERT INTO GoldPriceDisplay (DeviceID, Location, GoldPrice, LastUpdated)
 VALUES 
-    (101, 'New York - 5th Avenue', 1850.75, '2024-05-30 14:23:45'),
-    (102, 'London - Bond Street', 1845.50, '2024-05-30 15:00:00'),
-    (103, 'Tokyo - Ginza', 1860.00, '2024-05-30 16:30:15'),
-    (104, 'Dubai - Gold Souk', 1835.25, '2024-05-30 17:45:30'),
-    (105, 'Sydney - Pitt Street', 1852.10, '2024-05-30 18:20:00');
+    (101, 'vietnam', 1850.75, '2024-05-30 14:23:45');
 CREATE TABLE LoyaltyPoints (
     ID INT PRIMARY KEY IDENTITY(1,1),
     CustomerID INT NOT NULL,

@@ -9,6 +9,8 @@ namespace BackEnd.Models
         public int? OrderId { get; set; }
         [Required]
         public int? PromotionId { get; set; }
+
+        public string? PromotionName { get; set; }
         [Required]
         public decimal? TotalPrice { get; set; }
 
