@@ -6,6 +6,7 @@ using BackEnd.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace BackEnd.Controllers
 {
@@ -16,17 +17,21 @@ namespace BackEnd.Controllers
         private readonly IOrderDetailService _orderDetailService;
         private readonly ICustomerService _customerService;
         private readonly ILoyalPointService _loyalPointService;
-
-
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IInvoiceService _invoiceService;
         public StaffOrderController(IOrderDetailService orderDetailService,
             ICustomerService customerService,
-            ILoyalPointService loyalPointService)
+            ILoyalPointService loyalPointService,
+            IHttpContextAccessor httpContextAccessor,
+            IInvoiceService invoiceService)
                                                     
         {
             _orderDetailService = orderDetailService;
 
             _customerService = customerService;
             _loyalPointService = loyalPointService;
+            _httpContextAccessor = httpContextAccessor;
+            _invoiceService = invoiceService;
 
         }
 
@@ -133,6 +138,29 @@ namespace BackEnd.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
+        //https://localhost:7002/api/StaffOrder/searchInvoice/{id}
+        [HttpGet("searchInvoice/{orderId}")]
+        [StaffAuthorize]
+        //
+        public async Task<IActionResult> GetInvoice(int orderId)
+        {
+            var invoice = await _invoiceService.GetInvoiceByIdAsync(orderId);
+            if (invoice == null)
+            {
+                return NotFound("wrong order Id");
+            }
+
+            return Ok(invoice);
+        }
+
+        //https://localhost:7002/api/StaffOrder/PromotionInvoice/{orderId}
+        [HttpPost("PromotionInvoice/{orderId}")]
+        [StaffAuthorize]
+        public async Task<IActionResult> AddPromotionToInvoice(int orderId)
+        {
+            await _invoiceService.AddInvoiceAsync(orderId);
+            return Ok();
+        }
     }
 }

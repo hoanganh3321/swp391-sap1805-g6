@@ -13,9 +13,9 @@ namespace BackEnd.Reporitories
             _context = context;
         }
 
-        public async Task<Invoice?> GetInvoiceByIdAsync(int? invoiceId)
+        public async Task<Invoice?> GetInvoiceByIdAsync(int? orderId)
         {
-            return await _context.Invoices.FindAsync(invoiceId);
+            return await _context.Invoices.FirstOrDefaultAsync(o=>o.OrderId==orderId);
         }
 
         public async Task<IEnumerable<Invoice>> GetAllInvoicesAsync()

@@ -21,6 +21,7 @@ public partial class Admin
     public int? RoleId { get; set; }
     [StringLength(20)]
     public string? Phone { get; set; }
+    public virtual ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
 
     public virtual Role? Role { get; set; }
 }

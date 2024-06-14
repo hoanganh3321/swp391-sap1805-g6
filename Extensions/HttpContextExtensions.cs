@@ -19,9 +19,9 @@ namespace BackEnd.Extensions
 
             public static int? GetAdminId(this HttpContext context)
             {
-                if (context.Items.TryGetValue("adminId", out var adminId))
+                if (context.Items.TryGetValue("AdminID", out var AdminID))
                 {
-                    return (int?) adminId;
+                    return (int?)AdminID;
                 }
                 return null;
             }

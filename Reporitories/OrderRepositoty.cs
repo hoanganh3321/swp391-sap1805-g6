@@ -78,6 +78,11 @@ namespace BackEnd.Reporitories
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.CustomerId == customerId);
             return order?.TotalAmount;
         }
+        public async Task<decimal?> GetPriceWithNoPromotionAsync(int? orderId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.OrderId == orderId);
+            return order?.TotalAmount;
+        }
 
         public async Task DeleteOrderAsync(int? orderId)
         {
@@ -89,6 +94,20 @@ namespace BackEnd.Reporitories
                 _context.Orders.Remove(order);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<int?> SearchCustomerByOrderId(int? orderId)
+        {
+            if (orderId == null)
+            {
+                throw new ArgumentNullException(nameof(orderId));
+            }
+
+            var order = await _context.Orders
+                .AsNoTracking()// ham nay dung de nang cao hieu suat neu ko co y dinh muon cap nhat bang order
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+
+            return order?.CustomerId;
         }
     }
 }

@@ -14,17 +14,15 @@ namespace BackEnd.Services
         private readonly ILoyalPointRepository _repository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IOrderRepository _orderRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+
 
         public LoyalPointService(ILoyalPointRepository repository, 
             ICustomerRepository customerRepository,
-            IOrderRepository orderRepository,
-            IHttpContextAccessor httpContextAccessor)
+            IOrderRepository orderRepository)
         {
             _repository = repository;
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<LoyaltyPoint>> GetAllAsync()
@@ -39,7 +37,7 @@ namespace BackEnd.Services
 
         public async Task AddAsync(OrderViewModel orderViewModel)
         {
-            var customer = await _customerRepository.GetCustomerById(orderViewModel.customerId);
+            var customer = await _customerRepository.GetCustomerByIdAsync(orderViewModel.customerId);
             if (customer == null)
             {
                 throw new Exception("Không tìm thấy khách hàng.");
@@ -86,7 +84,7 @@ namespace BackEnd.Services
 
         public async Task DeleteAsync(StaffDeleteModel staffDeleteModel)
         {
-            var customer = await _customerRepository.GetCustomerById(staffDeleteModel.customerId);
+            var customer = await _customerRepository.GetCustomerByIdAsync(staffDeleteModel.customerId);
             if (customer == null)
             {
                 throw new Exception("Không tìm thấy khách hàng.");

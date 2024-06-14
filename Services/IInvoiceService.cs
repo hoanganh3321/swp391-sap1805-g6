@@ -4,9 +4,9 @@ namespace BackEnd.Services
 {
     public interface IInvoiceService
     {
-        Task<Invoice?> GetInvoiceByIdAsync(int? invoiceId);
+        Task<Invoice?> GetInvoiceByIdAsync(int? oriderId);
         Task<IEnumerable<Invoice>> GetAllInvoicesAsync();
-        Task<Invoice> AddInvoiceAsync(Invoice invoice);
+        Task AddInvoiceAsync(int? orderId);
         Task<Invoice> UpdateInvoiceAsync(Invoice invoice);
         Task<bool> DeleteInvoiceAsync(int invoiceId);
     }

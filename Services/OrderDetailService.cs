@@ -14,20 +14,19 @@ namespace BackEnd.Services
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ILoyalPointService _loyalPointService;
+
         
         public OrderDetailService(
              IOrderDetailRepository orderDetailRepository,
              IProductRepository productRepository,
              IOrderRepository orderRepository,
-             IHttpContextAccessor httpContextAccessor,
-             ILoyalPointService loyalPointService)             
+             IHttpContextAccessor httpContextAccessor)             
         {
             _orderDetailRepository = orderDetailRepository;
             _productRepository = productRepository;
             _orderRepository = orderRepository;
             _httpContextAccessor = httpContextAccessor;
-            _loyalPointService = loyalPointService;
+
         }
         ////////////////////////////////////////////////////////////////Customer///////////////////////////////////////////
         //add to cart
@@ -330,6 +329,7 @@ namespace BackEnd.Services
             product.Quantity -= cartmodel.Quantity;
             await _productRepository.UpdateProductAsync(product.ProductId, product);
 
+
         }
 
         //delete from cart
@@ -431,7 +431,10 @@ namespace BackEnd.Services
 
         public async Task<IEnumerable<Order>> StaffViewCartAsync(int? customerId)
         {
+
             return await _orderDetailRepository.GetOrderDetailsByCusIdAsync(customerId);
+            //luu lai orderId
+            
         }
 
     }
