@@ -65,6 +65,9 @@ builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<IProductReturnService, ProductReturnService>();
 builder.Services.AddScoped<IProductReturnRepository, ProductReturnRepository>();
 //
+builder.Services.AddScoped<IReturnPolicyService, ReturnPolicyService>();
+builder.Services.AddScoped<IReturnPolicyRepository, ReturnPolicyRepository>();
+//
 builder.Services.AddScoped<IGoldPriceDisplayRepository, GoldPriceDisplayRepository>();
 builder.Services.AddScoped<IGoldPriceDisplayService, GoldPriceDisplayService>();
 //
