@@ -5,6 +5,7 @@ import AdminLayout from "./layouts/admin";
 import RtlLayout from "./layouts/rtl";
 import Login from "../src/components/login/Login";
 import Signup from "../src/components/signup/Signup";
+import ProductDetail from "./components/products/ProductDetail";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
       <Route path="rtl/*" element={<RtlLayout />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={< Signup />} />
+      <Route path="/product/:id" element={<ProductDetail />} />
     </Routes>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import useAuth from "../../../hook/useAth";
 
 const ButtonCreate = ({ isOpen, onClose }) => {
   const [productName, setProductName] = useState("");
@@ -35,6 +36,7 @@ const ButtonCreate = ({ isOpen, onClose }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+        //   "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(productData),
       });
