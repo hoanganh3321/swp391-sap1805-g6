@@ -67,6 +67,9 @@ builder.Services.AddScoped<IProductReturnRepository, ProductReturnRepository>();
 //
 builder.Services.AddScoped<IGoldPriceDisplayRepository, GoldPriceDisplayRepository>();
 builder.Services.AddScoped<IGoldPriceDisplayService, GoldPriceDisplayService>();
+//
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<IStoreService, StoreService>();
 // Đăng ký filter 
 builder.Services.AddScoped<JwtAuthorizationFilter>();
 builder.Services.AddScoped<AdminAuthorizationFilter>();

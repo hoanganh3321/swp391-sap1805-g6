@@ -24,4 +24,5 @@ public partial class Staff
     public virtual Role? Role { get; set; }
 
     public virtual Store? Store { get; set; }
+    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 }

@@ -16,5 +16,19 @@ namespace BackEnd.Reporitories
         {
             return await _context.Staff.FirstOrDefaultAsync(c => c.Email == email);
         }
+
+        public async Task<Store> GetStoreByStaffIdAsync(int? staffId)
+        {
+            var staff = await _context.Staff
+                .Include(s => s.Store) // Đảm bảo Staff được load với thông tin của Store
+                .FirstOrDefaultAsync(s => s.StaffId == staffId);
+
+            if (staff == null)
+            {
+                throw new ArgumentException($"Staff with ID {staffId} not found.");
+            }
+
+            return staff.Store;
+        }
     }
 }

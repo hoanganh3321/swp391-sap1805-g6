@@ -9,5 +9,6 @@ namespace BackEnd.Reporitories
         Task<Invoice> AddInvoiceAsync(Invoice invoice);
         Task<Invoice> UpdateInvoiceAsync(Invoice invoice);
         Task<bool> DeleteInvoiceAsync(int invoiceId);
+        Task<List<Invoice>> GetInVoiceAsync(int? staffId);
     }
 }

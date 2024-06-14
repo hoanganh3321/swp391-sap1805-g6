@@ -6,7 +6,7 @@ namespace BackEnd.Services
     {
         Task<Invoice?> GetInvoiceByIdAsync(int? oriderId);
         Task<IEnumerable<Invoice>> GetAllInvoicesAsync();
-        Task AddInvoiceAsync(int? orderId);
+        Task AddInvoiceAsync(int? orderId,int? staffId);
         Task<Invoice> UpdateInvoiceAsync(Invoice invoice);
         Task<bool> DeleteInvoiceAsync(int invoiceId);
     }

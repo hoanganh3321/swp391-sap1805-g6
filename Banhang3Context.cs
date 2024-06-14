@@ -133,9 +133,9 @@ public partial class Banhang3Context : DbContext
             entity.Property(e => e.Location).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<Invoice>(entity =>
+      modelBuilder.Entity<Invoice>(entity =>
         {
-            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__D796AAD58D8660CE");
+            entity.HasKey(e => e.InvoiceId).HasName("PK__Invoice__D796AAD551F23F5B");
 
             entity.ToTable("Invoice");
 
@@ -145,6 +145,7 @@ public partial class Banhang3Context : DbContext
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.PromotionId).HasColumnName("PromotionID");
             entity.Property(e => e.PromotionName).HasMaxLength(255);
+            entity.Property(e => e.StaffId).HasColumnName("StaffID");
             entity.Property(e => e.TotalPrice).HasColumnType("decimal(18, 2)");
 
             entity.HasOne(d => d.Order).WithOne(p => p.Invoice)
@@ -154,6 +155,10 @@ public partial class Banhang3Context : DbContext
             entity.HasOne(d => d.Promotion).WithMany(p => p.Invoices)
                 .HasForeignKey(d => d.PromotionId)
                 .HasConstraintName("FK_Invoice_Promotion");
+
+            entity.HasOne(d => d.Staff).WithMany(p => p.Invoices)
+                .HasForeignKey(d => d.StaffId)
+                .HasConstraintName("FK_Invoice_Staff");
         });
 
         modelBuilder.Entity<LoyaltyPoint>(entity =>

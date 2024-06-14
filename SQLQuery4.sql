@@ -213,8 +213,10 @@ CREATE TABLE Invoice (
     PromotionID INT, -- Khóa ngoại liên kết với bảng Promotion
     PromotionName NVARCHAR(255), -- Tên của khuyến mãi
     TotalPrice DECIMAL(18, 2), -- Tổng giá của hóa đơn
+	StaffID INT,
     CONSTRAINT FK_Invoice_Order FOREIGN KEY (OrderID) REFERENCES [Order](OrderID), -- Ràng buộc khóa ngoại đến bảng Order
-    CONSTRAINT FK_Invoice_Promotion FOREIGN KEY (PromotionID) REFERENCES Promotion(PromotionID) -- Ràng buộc khóa ngoại đến bảng Promotion
+    CONSTRAINT FK_Invoice_Promotion FOREIGN KEY (PromotionID) REFERENCES Promotion(PromotionID), -- Ràng buộc khóa ngoại đến bảng Promotion
+	CONSTRAINT FK_Invoice_Staff FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
 );
 ALTER TABLE Invoice
 ADD CONSTRAINT UQ_Invoice_OrderID UNIQUE (OrderID);
@@ -248,3 +250,4 @@ CREATE TABLE ProductReturns (
     CONSTRAINT FK_ProductReturns_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
 );
 DROP TABLE ProductReturns
+

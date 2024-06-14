@@ -2,7 +2,7 @@
 
 namespace BackEnd.Models
 {
-    public class Invoice
+    public partial class Invoice
     {
         public int InvoiceId { get; set; }
         [Required]
@@ -14,8 +14,12 @@ namespace BackEnd.Models
         [Required]
         public decimal? TotalPrice { get; set; }
 
+        public int? StaffId { get; set; }
+
         public virtual Order? Order { get; set; }
 
         public virtual Promotion? Promotion { get; set; }
+
+        public virtual Staff? Staff { get; set; }
     }
 }

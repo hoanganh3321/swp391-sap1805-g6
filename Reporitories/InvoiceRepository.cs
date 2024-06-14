@@ -49,5 +49,9 @@ namespace BackEnd.Reporitories
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<List<Invoice>> GetInVoiceAsync(int? staffId)
+        {
+            return await _context.Invoices.Where(i => i.StaffId == staffId).ToListAsync();
+        }
     }
 }

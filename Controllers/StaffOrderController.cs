@@ -159,7 +159,9 @@ namespace BackEnd.Controllers
         [StaffAuthorize]
         public async Task<IActionResult> AddPromotionToInvoice(int orderId)
         {
-            await _invoiceService.AddInvoiceAsync(orderId);
+            int? staffId = _httpContextAccessor.HttpContext.GetStaffId();
+            if (staffId == null) { throw new Exception("phien dang nhap het han");}
+            await _invoiceService.AddInvoiceAsync(orderId,staffId);
             return Ok();
         }
     }

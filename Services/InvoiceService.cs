@@ -9,15 +9,21 @@ namespace BackEnd.Services
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly ICustomerRepository _customerRepository;
+        private readonly IStaffRepository _staffRepository;
+        private readonly IStoreRepository _storeRepository;
 
 
         public InvoiceService(IInvoiceRepository invoiceRepository,
           IOrderRepository orderRepository,
-          ICustomerRepository customerRepository)
+          ICustomerRepository customerRepository,
+          IStaffRepository staffRepository,
+          IStoreRepository storeRepository)
         {
             _invoiceRepository = invoiceRepository;
             _orderRepository = orderRepository;
             _customerRepository = customerRepository;
+            _staffRepository = staffRepository;
+            _storeRepository = storeRepository;
         }
 
         public async Task<Invoice?> GetInvoiceByIdAsync(int? orderId)
@@ -29,7 +35,8 @@ namespace BackEnd.Services
         {
             return await _invoiceRepository.GetAllInvoicesAsync();
         }
-        public async Task AddInvoiceAsync(int? orderId)
+
+        public async Task AddInvoiceAsync(int? orderId, int? staffId)
         {
             if (orderId == null)
             {
@@ -93,9 +100,20 @@ namespace BackEnd.Services
                 PromotionId = promotionId,
                 PromotionName = promotionName,
                 TotalPrice = totalPrice,
+                StaffId= staffId
             };
 
             await _invoiceRepository.AddInvoiceAsync(invoice);
+            //update revenue store
+            var iv = await _invoiceRepository.GetInVoiceAsync(staffId);
+            var st= await _staffRepository.GetStoreByStaffIdAsync(staffId);
+            st.Revenue = 0;
+            foreach (var item in iv) 
+            {         
+                st.Revenue += item.TotalPrice;   
+            }
+            await _storeRepository.UpdateRevenStoreAsync(st);
+            
         }
 
 
