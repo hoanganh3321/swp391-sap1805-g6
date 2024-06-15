@@ -2,7 +2,7 @@ import React from 'react';
 import Footer from '../footer/FooterHomePage';
 import Navbar from '../navbar/Navbar';
 import { Link } from 'react-router-dom';
-import BannerImg from "../../assets/img/banner/jewelry.jpg";
+
 
 
 const Payment = () => {
