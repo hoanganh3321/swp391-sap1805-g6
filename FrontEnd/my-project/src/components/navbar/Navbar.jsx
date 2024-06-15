@@ -1,13 +1,13 @@
-/** @format */
-"use client";
-
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-
+import Dropdown from '../../components/dropdown/index';
 import { FiMenu } from "react-icons/fi";
-// import { AiOutlineShoppingCart } from "react-icons/ai";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 import { IoCloseOutline } from "react-icons/io5";
+import { MdOutlineNotificationsActive } from "react-icons/md";
+
 import clsx from "clsx";
+import avatar from '../../assets/img/avatars/avatar3.png'
 
 export default function Navbar() {
   const [isSideMenuOpen, setMenu] = useState(false);
@@ -18,7 +18,7 @@ export default function Navbar() {
       link: "#"
     },
     {
-      labe: "Men",
+      labe: "Gemstone",
       link: "#"
     },
     {
@@ -42,14 +42,14 @@ export default function Navbar() {
               className="text-3xl cursor-pointer lg:hidden"
             />
             {/* logo */}
-            <Link href={"/"} className="font-mono text-4xl">
+            <Link href={"/"} className="font-mono text-4xl text-bloom">
               Alumina Store
             </Link>
           </section>
           {navlinks.map((d, i) => (
             <Link
               key={i}
-              className="hidden text-gray-400 lg:block hover:text-black"
+              className="hidden lg:block hover:text-black text-hemp"
               href={d.link}
             >
               {d.labe}
@@ -78,19 +78,18 @@ export default function Navbar() {
           </section>
         </div>
 
-        {/* last section */}
-        {/* <section className="flex items-center gap-4">
-          
-          <AiOutlineShoppingCart className="text-3xl" />
-          <Image
-            width={40}
-            height={40}
-            className="w-8 h-8 rounded-full "
-            src="https://i.pravatar.cc/150?img=52"
-            alt="avatar-img"
+
+        <div className="flex items-center">
+          <AiOutlineShoppingCart className="mr-8 text-2xl cursor-pointer" />
+          <MdOutlineNotificationsActive className="mr-8 text-2xl cursor-pointer" />
+
+          <img
+            className="w-10 h-10 rounded-full"
+            src={avatar}
+            alt="Elon Musk"
           />
-          
-        </section> */}
+
+        </div>
       </nav>
       <hr className="" />
     </main>
