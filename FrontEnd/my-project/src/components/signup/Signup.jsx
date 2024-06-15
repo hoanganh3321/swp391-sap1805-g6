@@ -16,7 +16,7 @@ const Signup = () => {
                             <div data-aos="fade-up" className="flex items-center">
                                 <p>First name</p>
                             </div>
-                            <input type="text" className="border border-gray-800 rounded-full h-10" />
+                            <input type="text" className="border border-gray-800 rounded-full h-10 px-4" />
 
 
                         </div>
@@ -24,19 +24,19 @@ const Signup = () => {
                             <div data-aos="fade-up" className="flex item-center">
                                 <p>Last name</p>
                             </div>
-                            <input type="text" className="border border-gray-800 rounded-full h-10" />
+                            <input type="text" className="border border-gray-800 rounded-full h-10 px-4" />
                         </div>
 
                         <div className="flex flex-col gap-4">
                             <div data-aos="fade-up" className="flex items-center">
                                 <p>Email</p>
                             </div>
-                            <input type="email" className="border border-gray-800 rounded-full h-10" placeholder="   Enter your email" />
+                            <input type="email" className="border border-gray-800 rounded-full h-10 px-4" placeholder="Enter your email" />
 
                             <div data-aos="fade-up" className="flex items-center gap-4">
                                 <p>Password</p>
                             </div>
-                            <input type="password" className="border border-gray-800 rounded-full h-10" placeholder="   ****************" />
+                            <input type="password" className="border border-gray-800 rounded-full h-10 px-4" placeholder="   ****************" />
 
 
                             <button className='w-full mb-1 text-[18px] mt-2 rounded-full bg-red-600 text-gray-50 shadow-lg py-2 ' type="submit">Create account</button>

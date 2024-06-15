@@ -46,12 +46,12 @@ const Login = () => {
                                 <div data-aos="fade-up" className="flex items-center">
                                     <p>Email</p>
                                 </div>
-                                <input type="email" className="border border-gray-800 rounded-full h-10" placeholder="   Enter your email" onChange={(e) => setEmail(e.target.value)} />
+                                <input type="email" className="border border-gray-800 rounded-full h-10 px-4" placeholder="Enter your email" onChange={(e) => setEmail(e.target.value)} />
 
                                 <div data-aos="fade-up" className="flex items-center gap-4">
                                     <p>Password</p>
                                 </div>
-                                <input type="password" className="border border-gray-800 rounded-full h-10" placeholder="   ****************" onChange={(e) => setPassword(e.target.value)} />
+                                <input type="password" className="border border-gray-800 rounded-full h-10 px-4" placeholder="****************" onChange={(e) => setPassword(e.target.value)} />
 
                                 <div className='flex justify-between items-center'>
                                     <div className="flex">
