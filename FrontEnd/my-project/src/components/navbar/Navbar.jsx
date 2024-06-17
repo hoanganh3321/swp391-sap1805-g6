@@ -1,34 +1,34 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import Dropdown from '../../components/dropdown/index';
+import Dropdown from "../../components/dropdown/index";
 import { FiMenu } from "react-icons/fi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { IoCloseOutline } from "react-icons/io5";
 import { MdOutlineNotificationsActive } from "react-icons/md";
 
 import clsx from "clsx";
-import avatar from '../../assets/img/avatars/avatar3.png'
+import avatar from "../../assets/img/avatars/avatar3.png";
 
 export default function Navbar() {
   const [isSideMenuOpen, setMenu] = useState(false);
 
   const navlinks = [
     {
-      labe: "Collections",
-      link: "#"
+      labe: "Sales",
+      link: "#",
     },
     {
-      labe: "Gemstone",
-      link: "#"
+      labe: "Products",
+      link: "#",
     },
     {
       labe: "About",
-      link: "#"
+      link: "#",
     },
     {
       labe: "Contact",
-      link: "#"
-    }
+      link: "#",
+    },
   ];
 
   return (
@@ -42,7 +42,7 @@ export default function Navbar() {
               className="text-3xl cursor-pointer lg:hidden"
             />
             {/* logo */}
-            <Link href={"/"} className="font-mono text-4xl text-bloom">
+            <Link to={"/home"} className="font-mono text-4xl text-bloom">
               Alumina Store
             </Link>
           </section>
@@ -78,9 +78,10 @@ export default function Navbar() {
           </section>
         </div>
 
-
         <div className="flex items-center">
-          <AiOutlineShoppingCart className="mr-8 text-2xl cursor-pointer" />
+          <Link to="/cart" className="mr-8 text-2xl cursor-pointer">
+            <AiOutlineShoppingCart />
+          </Link>
           <MdOutlineNotificationsActive className="mr-8 text-2xl cursor-pointer" />
           <img
             className="w-10 h-10 rounded-full"
