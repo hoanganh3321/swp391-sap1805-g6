@@ -12,7 +12,7 @@ import Payment from "./components/paymentpage/Payment";
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/home" replace />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/home" element={<Home />} />
       <Route path="admin/*" element={<AdminLayout />} />
       <Route path="rtl/*" element={<RtlLayout />} />

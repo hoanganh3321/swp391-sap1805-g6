@@ -1,44 +1,35 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import Card from "../../../../components/card";
-import Checkbox from "../../../../components/checkbox";
-// import useAuth from "../../../../hook/useAth";
-import {
-  useGlobalFilter,
-  usePagination,
-  useSortBy,
-  useTable,
-} from "react-table";
 import ButtonCreate from "../../../../components/atom/ButtonCreate/ButtonCreate";
 import ErrorModal from "./ErrorModal";
+import { Space, Table, TagModal, Form, Input, Button, Modal } from 'antd';
 
 const CheckTable = (props) => {
   const { columnsData, tableData } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [searchId, setSearchId] = useState("");
   const [data, setData] = useState(tableData);
   const [errorMessage, setErrorMessage] = useState("");
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [form] = Form.useForm();
 
-  const columns = useMemo(() => columnsData, [columnsData]);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const tableInstance = useTable(
-    {
-      columns,
-      data,
-    },
-    useGlobalFilter,
-    useSortBy,
-    usePagination
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    page,
-    prepareRow,
-    initialState,
-  } = tableInstance;
-  initialState.pageSize = 11;
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`https://localhost:7002/api/product/list`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
 
   const handleSearch = async () => {
     if (searchId.trim() === "") {
@@ -55,13 +46,145 @@ const CheckTable = (props) => {
         throw new Error("Product not found");
       }
       const result = await response.json();
-      setData([result]); 
+      setData([result]);
       setErrorMessage("");
     } catch (error) {
       setErrorMessage(error.message);
     }
   };
 
+  // const handleDelete = async (id) => {
+  //   console.log("Attempting to delete product with ProductId:", id);
+
+  //   if (!window.confirm("Are you sure you want to delete this product?")) {
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await fetch(
+  //       `https://localhost:7002/api/product/delete/${id}`,
+  //       {
+  //         method: 'DELETE',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         }
+  //       }
+  //     );
+
+  //     console.log("Fetch request completed with status:", response.status);
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       console.error('Error response:', errorData);
+  //       throw new Error(errorData.title || 'Failed to delete product');
+  //     }
+
+  //     console.log("Product deleted successfully, updating state.");
+  //     setData((prevData) => prevData.filter((product) => product.ProductId !== id));
+  //     setErrorMessage('');
+  //   } catch (error) {
+  //     console.error('Delete error:', error);
+  //     setErrorMessage(error.message);
+  //   }
+  // };
+  const handleDelete = async (id) => {
+    console.log("Attempting to delete product with ProductId:", id);
+
+    if (!window.confirm("Are you sure you want to delete this product?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://localhost:7002/api/product/delete/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      console.log("Fetch request completed with status:", response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        throw new Error(errorData.title || 'Failed to delete product');
+      }
+
+      console.log("Product deleted successfully, updating state.");
+      fetchData();
+      setErrorMessage('');
+    } catch (error) {
+      console.error('Delete error:', error);
+      setErrorMessage(error.message);
+    }
+  };
+
+  const handleEdit = (record) => {
+    setEditingProduct(record);
+    form.setFieldsValue(record);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdate = async (values) => {
+    try {
+      const response = await fetch(
+        `https://localhost:7002/api/product/update/${editingProduct.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(values)
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.title || 'Failed to update product');
+      }
+
+      setIsEditModalOpen(false);
+      fetchData();
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
+
+  const column = [
+    {
+      title: 'ProductName',
+      dataIndex: 'productName',
+      key: 'productName',
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+    },
+    {
+      title: 'Weight',
+      dataIndex: 'weight',
+      key: 'weight',
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <div >
+          <button onClick={() => handleEdit(record)}>Edit</button>
+          <button onClick={()=>{handleDelete(record.id)}}>Delete</button>
+        </div>
+      ),
+    },
+  ];
   return (
     <Card extra={"w-full sm:overflow-auto p-4"}>
       <header className="relative flex items-center justify-between">
@@ -97,104 +220,60 @@ const CheckTable = (props) => {
           onClose={() => setIsModalOpen(false)}
         />
       </header>
-
-      {errorMessage && (
-        <ErrorModal
-          message={errorMessage}
-          onClose={() => setErrorMessage("")}
-        />
-      )}
-
-      <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
-        <table
-          {...getTableProps()}
-          className="w-full"
-          variant="simple"
-          color="gray-500"
-          mb="24px"
+      
+      <Table columns={column} dataSource={data} />
+      <Modal
+        title="Edit Product"
+        open={isEditModalOpen}
+        onCancel={() => setIsEditModalOpen(false)}
+        footer={[
+          <Button key="back" onClick={() => setIsEditModalOpen(false)}>
+            Cancel
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            onClick={() => form.submit()}
+          >
+            Save
+          </Button>,
+        ]}
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleUpdate}
         >
-          <thead>
-            {headerGroups.map((headerGroup, index) => (
-              <tr {...headerGroup.getHeaderGroupProps()} key={index}>
-                {headerGroup.headers.map((column, index) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="border-b border-gray-200 pr-16 pb-[10px] text-start dark:!border-navy-700"
-                    key={index}
-                  >
-                    <div className="text-xs font-bold tracking-wide text-gray-600 lg:text-xs">
-                      {column.render("Header")}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {page.map((row, index) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()} key={index}>
-                  {row.cells.map((cell, index) => {
-                    let data = "";
-                    if (cell.column.Header === "Product Name") {
-                      data = (
-                        <div className="flex items-center gap-2">
-                          <Checkbox />
-                          <p className="text-sm font-bold text-navy-700 dark:text-white">
-                            {cell.value}{" "}
-                          </p>
-                        </div>
-                      );
-                    } else if (cell.column.Header === "Weight") {
-                      data = (
-                        <div className="flex items-center">
-                          <p className="text-sm font-bold text-navy-700 dark:text-white">
-                            {cell.value}
-                          </p>
-                        </div>
-                      );
-                    } else if (cell.column.Header === "Price") {
-                      data = (
-                        <p className="text-sm font-bold text-navy-700 dark:text-white">
-                          {" "}
-                          {cell.value}{" "}
-                        </p>
-                      );
-                    } else if (cell.column.Header === "Quantity") {
-                      data = (
-                        <p className="text-sm font-bold text-navy-700 dark:text-white">
-                          {cell.value}
-                        </p>
-                      );
-                    } else if (cell.column.Header === "Actions") {
-                      data = (
-                        <div>
-                          <button className="px-3 py-1 mr-2 text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
-                            Edit
-                          </button>
-                          <button className="px-3 py-1 text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
-                            Delete
-                          </button>
-                        </div>
-                      );
-                    }
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        key={index}
-                        className="pt-[14px] pb-[16px] sm:text-[14px]"
-                      >
-                        {data}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+          <Form.Item
+            name="productName"
+            label="Product Name"
+            rules={[{ required: true, message: 'Please input the product name!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="price"
+            label="Price"
+            rules={[{ required: true, message: 'Please input the price!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="weight"
+            label="Weight"
+            rules={[{ required: true, message: 'Please input the weight!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="quantity"
+            label="Quantity"
+            rules={[{ required: true, message: 'Please input the quantity!' }]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Card>
   );
 };

@@ -36,27 +36,27 @@ const Login = () => {
                     <div className="grid items-center grid-cols-1 gap-6 sm:grid-cols-2">
                         {/* text details section */}
                         <div className="flex flex-col justify-center gap-6 sm:pt-0">
-                            <h1 data-aos="fade-up" className="text-3xl font-bold sm:text-4xl text-center">
+                            <h1 data-aos="fade-up" className="text-3xl font-bold text-center sm:text-4xl">
                                 WELCOME BACK
                             </h1>
-                            <p data-aos="fade-up" className="text-sm leading-5 tracking-wide text-gray-800 text-center">
+                            <p data-aos="fade-up" className="text-sm leading-5 tracking-wide text-center text-gray-800">
                                 Welcome back! Please enter your details
                             </p>
                             <div className="flex flex-col gap-4">
                                 <div data-aos="fade-up" className="flex items-center">
                                     <p>Email</p>
                                 </div>
-                                <input type="email" className="border border-gray-800 rounded-full h-10 px-4" placeholder="Enter your email" onChange={(e) => setEmail(e.target.value)} />
+                                <input type="email" className="h-10 px-4 border border-gray-800 rounded-full" placeholder="Enter your email" onChange={(e) => setEmail(e.target.value)} />
 
                                 <div data-aos="fade-up" className="flex items-center gap-4">
                                     <p>Password</p>
                                 </div>
-                                <input type="password" className="border border-gray-800 rounded-full h-10 px-4" placeholder="****************" onChange={(e) => setPassword(e.target.value)} />
+                                <input type="password" className="h-10 px-4 border border-gray-800 rounded-full" placeholder="****************" onChange={(e) => setPassword(e.target.value)} />
 
-                                <div className='flex justify-between items-center'>
+                                <div className='flex items-center justify-between'>
                                     <div className="flex">
                                         <input type="checkbox" name="" id="" />
-                                        <label htmlFor="Remember me">Remember me</label>
+                                        <label htmlFor="Remember me" className='ml-3'>Remember me</label>
                                     </div>
                                     <span>
                                         <Link to=''>Forgot password?</Link>

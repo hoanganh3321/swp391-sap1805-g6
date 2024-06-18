@@ -78,43 +78,7 @@ const Marketplace = () => {
             />
           ))}
         </div>
-        
-
-        {/* Recenlty Added setion */}
-        {/* <div className="mb-5 mt-5 flex items-center justify-between px-[26px]">
-          <h4 className="text-2xl font-bold text-navy-700 dark:text-white">
-            Recently Added
-          </h4>
-        </div> */}
-
-        {/* Recently Add NFTs */}
-        {/* <div className="grid grid-cols-1 gap-5 mt-5 mb-5 md:grid-cols-3">
-          <NftCard
-            bidders={[avatar1, avatar2, avatar3]}
-            title="Abstract Colors"
-            author="Esthera Jackson"
-            price="0.91"
-            image={NFt4}
-          />
-          <NftCard
-            bidders={[avatar1, avatar2, avatar3]}
-            title="ETH AI Brain"
-            author="Nick Wilson"
-            price="0.7"
-            image={NFt5}
-          />
-          <NftCard
-            bidders={[avatar1, avatar2, avatar3]}
-            title="Mesh Gradients"
-            author="Will Smith"
-            price="2.91"
-            image={NFt6}
-          />
-        </div> */}
       </div>
-
-      {/* right side section */}
-
       <div className="w-full h-full col-span-1 rounded-xl 2xl:col-span-1">
         <TopCreatorTable
           extra="mb-5"

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/FooterHomePage";
 
@@ -8,6 +7,7 @@ function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [showAlert, setShowAlert] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -28,17 +28,21 @@ function ProductDetail() {
   }, [id]);
 
   const handleAddToCart = async () => {
+    // const token = localStorage.getItem("jwtToken");
+    // console.log("JWT Token for Add to Cart:", token); // Debugging line
     try {
       const response = await fetch(
-        "https://localhost:7002/api/cart/addProductToCart",
+        "https://localhost:7002/api/StaffOrder/addProductToCart",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            // Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            productId: product.id,
-            quantity: 1,
+            customerId: 2,
+            ProductID: product.id,
+            Quantity: 1,
           }),
         }
       );
@@ -46,11 +50,17 @@ function ProductDetail() {
         throw new Error("Failed to add product to cart");
       }
       setShowAlert(true);
+      setShowError(false);
       setTimeout(() => {
         setShowAlert(false);
       }, 3000);
     } catch (error) {
       console.error("Failed to add product to cart:", error);
+      setShowError(true);
+      setShowAlert(false);
+      setTimeout(() => {
+        setShowError(false);
+      }, 3000);
     }
   };
 
@@ -72,8 +82,7 @@ function ProductDetail() {
                 {product?.productName}
               </h1>
               <p className="leading-relaxed">{product?.warranty}</p>
-              <div className="flex items-center pb-5 mt-6 mb-5 border-b-2 border-gray-100">
-              </div>
+              <div className="flex items-center pb-5 mt-6 mb-5 border-b-2 border-gray-100"></div>
               <div className="flex items-center justify-between">
                 <span className="text-2xl font-medium text-gray-900 title-font">
                   ${product?.price}
@@ -89,6 +98,9 @@ function ProductDetail() {
               </div>
               {showAlert && (
                 <div className="mt-4 text-green-600">Added to Cart</div>
+              )}
+              {showError && (
+                <div className="mt-4 text-red-600">Failed to add to Cart</div>
               )}
             </div>
           </div>

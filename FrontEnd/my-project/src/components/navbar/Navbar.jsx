@@ -83,11 +83,6 @@ export default function Navbar() {
             <AiOutlineShoppingCart />
           </Link>
           <MdOutlineNotificationsActive className="mr-8 text-2xl cursor-pointer" />
-          <img
-            className="w-10 h-10 rounded-full"
-            src={avatar}
-            alt="Elon Musk"
-          />
         </div>
       </nav>
       <hr className="" />
