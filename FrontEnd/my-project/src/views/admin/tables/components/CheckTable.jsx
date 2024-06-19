@@ -1,11 +1,11 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../../../../components/card";
 import ButtonCreate from "../../../../components/atom/ButtonCreate/ButtonCreate";
-import ErrorModal from "./ErrorModal";
-import { Space, Table, TagModal, Form, Input, Button, Modal } from 'antd';
+import { Table, Form, Input, InputNumber, Button, Modal, Checkbox, Row, Col } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const CheckTable = (props) => {
-  const { columnsData, tableData } = props;
+  const { tableData } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [searchId, setSearchId] = useState("");
@@ -53,40 +53,6 @@ const CheckTable = (props) => {
     }
   };
 
-  // const handleDelete = async (id) => {
-  //   console.log("Attempting to delete product with ProductId:", id);
-
-  //   if (!window.confirm("Are you sure you want to delete this product?")) {
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await fetch(
-  //       `https://localhost:7002/api/product/delete/${id}`,
-  //       {
-  //         method: 'DELETE',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         }
-  //       }
-  //     );
-
-  //     console.log("Fetch request completed with status:", response.status);
-
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       console.error('Error response:', errorData);
-  //       throw new Error(errorData.title || 'Failed to delete product');
-  //     }
-
-  //     console.log("Product deleted successfully, updating state.");
-  //     setData((prevData) => prevData.filter((product) => product.ProductId !== id));
-  //     setErrorMessage('');
-  //   } catch (error) {
-  //     console.error('Delete error:', error);
-  //     setErrorMessage(error.message);
-  //   }
-  // };
   const handleDelete = async (id) => {
     console.log("Attempting to delete product with ProductId:", id);
 
@@ -124,7 +90,10 @@ const CheckTable = (props) => {
 
   const handleEdit = (record) => {
     setEditingProduct(record);
-    form.setFieldsValue(record);
+    form.setFieldsValue({
+      ...record,
+      isBuyback: !!record.isBuyback, // Ensure isBuyback is boolean for Checkbox
+    });
     setIsEditModalOpen(true);
   };
 
@@ -153,9 +122,9 @@ const CheckTable = (props) => {
     }
   };
 
-  const column = [
+  const columns = [
     {
-      title: 'ProductName',
+      title: 'Product Name',
       dataIndex: 'productName',
       key: 'productName',
     },
@@ -178,13 +147,27 @@ const CheckTable = (props) => {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
-        <div >
-          <button onClick={() => handleEdit(record)}>Edit</button>
-          <button onClick={()=>{handleDelete(record.id)}}>Delete</button>
+        <div style={{ display: 'flex' }}>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => handleEdit(record)}
+            style={{ marginRight: 8 }}
+          >
+            Edit
+          </Button>
+          <Button
+            type="danger"
+            icon={<DeleteOutlined />}
+            onClick={() => handleDelete(record.id)}
+          >
+            Delete
+          </Button>
         </div>
       ),
     },
   ];
+
   return (
     <Card extra={"w-full sm:overflow-auto p-4"}>
       <header className="relative flex items-center justify-between">
@@ -220,11 +203,14 @@ const CheckTable = (props) => {
           onClose={() => setIsModalOpen(false)}
         />
       </header>
-      
-      <Table columns={column} dataSource={data} />
+
+      <div className="table-container">
+        <Table columns={columns} dataSource={data} pagination={false} />
+      </div>
+
       <Modal
         title="Edit Product"
-        open={isEditModalOpen}
+        visible={isEditModalOpen}
         onCancel={() => setIsEditModalOpen(false)}
         footer={[
           <Button key="back" onClick={() => setIsEditModalOpen(false)}>
@@ -238,39 +224,92 @@ const CheckTable = (props) => {
             Save
           </Button>,
         ]}
+        width={800} // Set width of the modal
       >
         <Form
           form={form}
-          layout="vertical"
           onFinish={handleUpdate}
+          initialValues={editingProduct} // Set initial values for all fields
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
         >
           <Form.Item
-            name="productName"
             label="Product Name"
+            name="productName"
             rules={[{ required: true, message: 'Please input the product name!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="price"
             label="Price"
+            name="price"
             rules={[{ required: true, message: 'Please input the price!' }]}
           >
-            <Input />
+            <InputNumber min={0} />
           </Form.Item>
           <Form.Item
-            name="weight"
             label="Weight"
+            name="weight"
             rules={[{ required: true, message: 'Please input the weight!' }]}
           >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            label="Quantity"
+            name="quantity"
+            rules={[{ required: true, message: 'Please input the quantity!' }]}
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            label="Warranty"
+            name="warranty"
+            rules={[{ required: true, message: 'Please input the warranty!' }]}
+          >
+            <Input/>
+          </Form.Item>
+          <Form.Item
+            label="Image Link"
+            name="image"
+          >
             <Input />
           </Form.Item>
           <Form.Item
-            name="quantity"
-            label="Quantity"
-            rules={[{ required: true, message: 'Please input the quantity!' }]}
+            label="Barcode"
+            name="barcode"
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            label="Manufacturing Cost"
+            name="manufacturingCost"
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            label="Stone Cost"
+            name="stoneCost"
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            label="Is Buyback"
+            name="isBuyback"
+            valuePropName="checked"
+          >
+            <Checkbox />
+          </Form.Item>
+          <Form.Item
+            label="Category ID"
+            name="categoryId"
+          >
+            <InputNumber min={0} />
+          </Form.Item>
+          <Form.Item
+            label="Store ID"
+            name="storeId"
+          >
+            <InputNumber min={0} />
           </Form.Item>
         </Form>
       </Modal>

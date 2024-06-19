@@ -1,34 +1,23 @@
-import React, { useState } from "react";
-// import useAuth from "../../../hook/useAth";
+import React from "react";
+import { Modal, Form, Input, InputNumber, Checkbox, Button, Row, Col } from "antd";
 
 const ButtonCreate = ({ isOpen, onClose }) => {
-  const [productName, setProductName] = useState("");
-  const [barcode, setBarcode] = useState("");
-  const [productPrice, setProductPrice] = useState("");
-  const [weight, setWeight] = useState("");
-  const [stoneCost, setStoneCost] = useState("");
-  const [warranty, setWarranty] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [manufacturingCost, setManufacturingCost] = useState("");
-  const [isBuyback, setIsBuyback] = useState(false);
-  const [categoryId, setCategoryId] = useState("");
-  const [storeId, setStoreId] = useState("");
+  const [form] = Form.useForm();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async (values) => {
     const productData = {
-      productName,
-      barcode,
-      productPrice,
-      weight,
-      stoneCost,
-      warranty,
-      quantity,
-      manufacturingCost,
-      isBuyback,
-      categoryId,
-      storeId,
+      productName: values.productName,
+      barcode: values.barcode,
+      productPrice: values.productPrice,
+      weight: values.weight,
+      stoneCost: values.stoneCost,
+      warranty: values.warranty,
+      quantity: values.quantity,
+      manufacturingCost: values.manufacturingCost,
+      isBuyback: values.isBuyback,
+      categoryId: values.categoryId,
+      storeId: values.storeId,
+      imageUrl: values.image,
     };
 
     try {
@@ -36,169 +25,167 @@ const ButtonCreate = ({ isOpen, onClose }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        //   "Authorization": `Bearer ${token}`,
+          // "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify(productData),
       });
-
+  
       if (response.ok) {
-        // Handle successful response
         console.log("Product added successfully");
-        // Clear the form
-        setProductName("");
-        setBarcode("");
-        setProductPrice("");
-        setWeight("");
-        setStoneCost("");
-        setWarranty("");
-        setQuantity("");
-        setManufacturingCost("");
-        setIsBuyback(false);
-        setCategoryId("");
-        setStoreId("");
-        // Close the modal after submission
+        form.resetFields(); 
         onClose();
       } else {
-        // Handle error response
-        console.error("Error adding product");
+        console.error("Error adding product:", response.status, response.statusText);
+        // Optionally handle specific error cases or display user-friendly messages
       }
     } catch (error) {
       console.error("Error:", error);
+      // Handle network errors or other exceptions
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-600 bg-opacity-50">
-        <div className="w-full max-w-md p-4 bg-white rounded-lg shadow-lg">
-            <h2 className="mb-4 text-xl font-semibold">Add Product</h2>
-            <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-2">
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Product Name</label>
-                    <input
-                        type="text"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={productName}
-                        onChange={(e) => setProductName(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Weight</label>
-                    <input
-                        type="number"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={weight}
-                        onChange={(e) => setWeight(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Product Price</label>
-                    <input
-                        type="number"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={productPrice}
-                        onChange={(e) => setProductPrice(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Stone Cost</label>
-                    <input
-                        type="number"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={stoneCost}
-                        onChange={(e) => setStoneCost(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Warranty</label>
-                    <input
-                        type="text"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={warranty}
-                        onChange={(e) => setWarranty(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Quantity</label>
-                    <input
-                        type="number"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={quantity}
-                        onChange={(e) => setQuantity(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Manufacturing Cost</label>
-                    <input
-                        type="number"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={manufacturingCost}
-                        onChange={(e) => setManufacturingCost(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="flex items-center mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Is Buyback</label>
-                    <input
-                        type="checkbox"
-                        className="w-5 h-5 ml-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        checked={isBuyback}
-                        onChange={(e) => setIsBuyback(e.target.checked)}
-                    />
-                </div>
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Category ID</label>
-                    <input
-                        type="number"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={categoryId}
-                        onChange={(e) => setCategoryId(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Store ID</label>
-                    <input
-                        type="number"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={storeId}
-                        onChange={(e) => setStoreId(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="mb-2">
-                    <label className="block mb-1 font-medium text-gray-700">Barcode</label>
-                    <input
-                        type="text"
-                        className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={barcode}
-                        onChange={(e) => setBarcode(e.target.value)}
-                        required
-                    />
-                </div>
-                <div className="flex justify-end col-span-2">
-                    <button
-                        type="button"
-                        className="px-3 py-1 mr-2 transition duration-300 bg-gray-300 rounded hover:bg-gray-400"
-                        onClick={onClose}
-                    >
-                        Cancel
-                    </button>
-                    <button type="submit" className="px-3 py-1 text-white transition duration-300 bg-blue-500 rounded hover:bg-blue-600">
-                        Add
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-);
+    <Modal
+      title="Add Product"
+      visible={isOpen}
+      onCancel={onClose}
+      footer={null}
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+      >
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="productName"
+              label="Product Name"
+              rules={[{ required: true, message: 'Please input the product name!' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="weight"
+              label="Weight"
+              rules={[{ required: true, message: 'Please input the weight!' }]}
+            >
+              <InputNumber min={0} className="w-full" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="productPrice"
+              label="Product Price"
+              rules={[{ required: true, message: 'Please input the product price!' }]}
+            >
+              <InputNumber min={0} className="w-full" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="stoneCost"
+              label="Stone Cost"
+              rules={[{ required: true, message: 'Please input the stone cost!' }]}
+            >
+              <InputNumber min={0} className="w-full" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="warranty"
+              label="Warranty"
+              rules={[{ required: true, message: 'Please input the warranty!' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="quantity"
+              label="Quantity"
+              rules={[{ required: true, message: 'Please input the quantity!' }]}
+            >
+              <InputNumber min={0} className="w-full" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="manufacturingCost"
+              label="Manufacturing Cost"
+              rules={[{ required: true, message: 'Please input the manufacturing cost!' }]}
+            >
+              <InputNumber min={0} className="w-full" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="isBuyback"
+              valuePropName="checked"
+            >
+              <Checkbox>Is Buyback</Checkbox>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="categoryId"
+              label="Category ID"
+              rules={[{ required: true, message: 'Please input the category ID!' }]}
+            >
+              <InputNumber min={0} className="w-full" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="storeId"
+              label="Store ID"
+              rules={[{ required: true, message: 'Please input the store ID!' }]}
+            >
+              <InputNumber min={0} className="w-full" />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              name="barcode"
+              label="Barcode"
+              rules={[{ required: true, message: 'Please input the barcode!' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              name="imageUrl"
+              label="Image URL"
+              rules={[{ required: true, message: 'Please input the image URL!' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item className="text-right">
+          <Button onClick={onClose} style={{ marginRight: 8 }}>
+            Cancel
+          </Button>
+          <Button type="primary" htmlType="submit">
+            Add
+          </Button>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
 };
 
 export default ButtonCreate;

@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/FooterHomePage";
+import { useNavigate } from "react-router-dom";
 
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [showAlert, setShowAlert] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
+  const [customerId, setCustomerId] = useState(1);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -28,7 +32,7 @@ function ProductDetail() {
   }, [id]);
 
   const handleAddToCart = async () => {
-    // const token = localStorage.getItem("jwtToken");
+    // const token = localStorage.getItem("jwttoken");
     // console.log("JWT Token for Add to Cart:", token); // Debugging line
     try {
       const response = await fetch(
@@ -37,23 +41,20 @@ function ProductDetail() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            // Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            customerId: 2,
-            ProductID: product.id,
-            Quantity: 1,
+            customerId: 1, // Replace with actual customerId
+            ProductID: product.productId,
+            Quantity: quantity, // Use selected quantity
           }),
         }
       );
       if (!response.ok) {
         throw new Error("Failed to add product to cart");
       }
-      setShowAlert(true);
-      setShowError(false);
-      setTimeout(() => {
-        setShowAlert(false);
-      }, 3000);
+      localStorage.setItem('customerId', customerId);
+      // Redirect to /cart after successful addition
+      navigate("/cart");
     } catch (error) {
       console.error("Failed to add product to cart:", error);
       setShowError(true);
@@ -88,6 +89,13 @@ function ProductDetail() {
                   ${product?.price}
                 </span>
                 <div className="flex ml-4">
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                    min="1"
+                    className="w-16 p-2 mr-4 border border-gray-300 rounded"
+                  />
                   <button
                     className="flex px-6 py-2 border-0 rounded text-hemp bg-bloom focus:outline-none"
                     onClick={handleAddToCart}
