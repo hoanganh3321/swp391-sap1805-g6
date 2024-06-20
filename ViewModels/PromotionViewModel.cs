@@ -17,6 +17,8 @@ namespace BackEnd.ViewModels
         [Range(0, 99.99)]
         public decimal? Discount { get; set; }
         [Required]
+        public int? Points { get; set; }
+        [Required]
         public bool? Approved { get; set; }
     }
 }

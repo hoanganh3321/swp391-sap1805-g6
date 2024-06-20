@@ -33,6 +33,7 @@ namespace BackEnd.Reporitories
                 EndDate = promotion.EndDate,
                 Discount = promotion.Discount,
                 Approved = promotion.Approved,
+                Points= promotion.Points,
                 ApprovedBy=adminId
             };
             _context.Promotions.Add(promo);

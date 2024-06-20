@@ -265,7 +265,7 @@ public partial class Banhang3Context : DbContext
 
         modelBuilder.Entity<Promotion>(entity =>
         {
-            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__52C42F2F2F12ED4D");
+            entity.HasKey(e => e.PromotionId).HasName("PK__Promotio__52C42F2FFC783AEF");
 
             entity.ToTable("Promotion");
 
@@ -278,7 +278,7 @@ public partial class Banhang3Context : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.StartDate).HasColumnName("Start_Date");
-
+            entity.Property(e => e.Points).HasColumnName("Points");
             entity.HasOne(d => d.ApprovedByNavigation).WithMany(p => p.Promotions)
                 .HasForeignKey(d => d.ApprovedBy)
                 .HasConstraintName("FK_Promotion_Approved_By");

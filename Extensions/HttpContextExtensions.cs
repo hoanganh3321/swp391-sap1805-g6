@@ -19,7 +19,11 @@ namespace BackEnd.Extensions
 
             public static int? GetAdminId(this HttpContext context)
             {
-                if (context.Items.TryGetValue("AdminID", out var AdminID))
+                if (context == null)
+                {
+                    throw new ArgumentNullException(nameof(context));
+                }
+            if (context.Items.TryGetValue("AdminID", out var AdminID))
                 {
                     return (int?)AdminID;
                 }

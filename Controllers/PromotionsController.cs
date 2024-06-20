@@ -19,16 +19,16 @@ namespace BackEnd.Controllers
             _promotionService = promotionService;
             _httpContextAccessor = httpContextAccessor;
         }
-
-        [HttpGet]
-        [AdminAuthorize]
+        //https://localhost:7002/api/Promotions/GetPromotions
+        [HttpGet("GetPromotions")]
+        // [AdminAuthorize]
         public async Task<ActionResult<IEnumerable<Promotion>>> GetPromotions()
-        {
-            int? admin = _httpContextAccessor.HttpContext.GetAdminId();
-            if (admin == null) { throw new Exception("phien dang nhap het han"); }
+        {          
             var promotions = await _promotionService.GetAllPromotionsAsync();
             return Ok(promotions);
         }
+        //IEnumerable:  lặp qua các phần tử của một tập hợp và không cần thêm, xóa hoặc sửa đổi các phần tử.
+        //List<T>:cần một tập hợp có thể thay đổi được, có thể thêm, xóa, hoặc sửa đổi các phần tử, và cần truy cập ngẫu nhiên tới các phần tử của nó.
         //https://localhost:7002/api/Promotions/search/{id}
         [HttpGet("search/{id}")]
         [AdminAuthorize]
@@ -74,8 +74,8 @@ namespace BackEnd.Controllers
             await _promotionService.UpdatePromotionAsync(admin,id, promotion);
             return NoContent();
         }
-
-        [HttpDelete("{id}")]
+        //https://localhost:7002/api/Promotions/DeletePromotion/{id}
+        [HttpDelete("DeletePromotion/{id}")]
         [AdminAuthorize]
         public async Task<IActionResult> DeletePromotion(int id)
         {

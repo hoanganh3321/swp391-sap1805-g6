@@ -22,6 +22,8 @@ public partial class Promotion
     [Required]
     public bool? Approved { get; set; }
     public int? ApprovedBy { get; set; }
+    [Required]
+    public int? Points { get; set; }
 
     public virtual Admin? ApprovedByNavigation { get; set; }
 

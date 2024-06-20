@@ -154,7 +154,7 @@ namespace BackEnd.Controllers
             return Ok(invoice);
         }
 
-        //https://localhost:7002/api/StaffOrder/PromotionInvoice/{orderId}///
+        //https://localhost:7002/api/StaffOrder/PromotionInvoice/{orderId}
         [HttpPost("PromotionInvoice/{orderId}")]
         [StaffAuthorize]
         public async Task<IActionResult> AddPromotionToInvoice(int orderId)

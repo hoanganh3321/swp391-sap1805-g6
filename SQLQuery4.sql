@@ -124,7 +124,7 @@ CREATE TABLE [Role] (
 	CONSTRAINT CK_Role_RoleName CHECK (RoleName IN ('ad', 'staff'))
 );
 
-
+drop table [Admin]
 CREATE TABLE [Admin] (
     AdminID INT PRIMARY KEY IDENTITY(1,1),
     AdminName NVARCHAR(100) NOT NULL,
@@ -160,7 +160,8 @@ CREATE TABLE Promotion (
   End_Date DATE,
   Discount DECIMAL(5, 2),
   Approved BIT DEFAULT 0,  
-  Approved_By int
+  Approved_By int,
+  Points int-----new
   CONSTRAINT FK_Promotion_Approved_By FOREIGN KEY (Approved_By) REFERENCES [Admin](AdminID)
 );
 drop table Promotion

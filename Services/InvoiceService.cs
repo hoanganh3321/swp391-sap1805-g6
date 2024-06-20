@@ -11,19 +11,22 @@ namespace BackEnd.Services
         private readonly ICustomerRepository _customerRepository;
         private readonly IStaffRepository _staffRepository;
         private readonly IStoreRepository _storeRepository;
+        private readonly IPromotionService _promotionService;
 
 
         public InvoiceService(IInvoiceRepository invoiceRepository,
           IOrderRepository orderRepository,
           ICustomerRepository customerRepository,
           IStaffRepository staffRepository,
-          IStoreRepository storeRepository)
+          IStoreRepository storeRepository,
+          IPromotionService promotionService)
         {
             _invoiceRepository = invoiceRepository;
             _orderRepository = orderRepository;
             _customerRepository = customerRepository;
             _staffRepository = staffRepository;
             _storeRepository = storeRepository;
+            _promotionService = promotionService;
         }
 
         public async Task<Invoice?> GetInvoiceByIdAsync(int? orderId)
@@ -47,7 +50,7 @@ namespace BackEnd.Services
             var priceWithNoPromotion = await _orderRepository.GetPriceWithNoPromotionAsync(orderId);
             // Lấy giá trị không đồng bộ của customerId
             var customerId = await _orderRepository.SearchCustomerByOrderId(orderId);
-
+            // Chờ để hoàn thành các nhiệm vụ không đồng bộ
             if (customerId == null)
             {
                 throw new InvalidOperationException("Customer not found for the given order.");
@@ -59,54 +62,42 @@ namespace BackEnd.Services
             {
                 throw new InvalidOperationException("Customer not found for the given order.");
             }
+            // Lấy điểm khách hàng từ đối tượng loyalPointOfCustomer
+            int? customerLoyaltyPoints = loyalPointOfCustomer.Points;
+            //liet ke tat ca chinh sach khuyến mại đã có trong database
+            var pro = await _promotionService.GetAllPromotionsAsync();
+            // Tìm khuyến mại phù hợp với điểm khách hàng
+            var applicablePromotion = pro
+                .Where(p => customerLoyaltyPoints >= p.Points)
+                .OrderByDescending(p => p.Points)
+                .FirstOrDefault();
 
-            // Xác định promotion id, name và total price dựa trên loyalty points
-            int promotionId;
-            string promotionName;
-            decimal? totalPrice;
-
-            if (loyalPointOfCustomer.Points >= 100)
-            {
-                promotionId = 4;
-                promotionName = "Loyal Point reach to 100 points";
-                totalPrice = priceWithNoPromotion / 2;
-            }
-            else if (loyalPointOfCustomer.Points >= 50)
-            {
-                promotionId = 3;
-                promotionName = "Loyal Point reach to 50 points";
-                totalPrice = (priceWithNoPromotion * 3) / 10;
-            }
-            else if (loyalPointOfCustomer.Points >= 20)
-            {
-                promotionId = 2;
-                promotionName = "Loyal Point reach to 20 points";
-                totalPrice = (priceWithNoPromotion * 3) / 20;
-            }
-            else if (loyalPointOfCustomer.Points >= 10)
-            {
-                promotionId = 1;
-                promotionName = "Loyal Point reach to 10 points";
-                totalPrice = priceWithNoPromotion / 10;
-            }
-            else
+            if (applicablePromotion == null)
             {
                 throw new InvalidOperationException("Customer does not have enough loyalty points for any promotion.");
             }
 
+            // Tính toán giá trị cuối cùng dựa trên khuyến mại
+            var totalPrice = priceWithNoPromotion * applicablePromotion.Discount;
+
             var invoice = new Invoice()
             {
                 OrderId = orderId.Value,
-                PromotionId = promotionId,
-                PromotionName = promotionName,
+                PromotionId = applicablePromotion.PromotionId,
+                PromotionName = applicablePromotion.Name,
                 TotalPrice = totalPrice,
-                StaffId= staffId
+                StaffId = staffId 
             };
 
             await _invoiceRepository.AddInvoiceAsync(invoice);
-            //update revenue store
+            // cập nhật lại doanh thu của cửa hàng nơi mà staff làm việc đặt hàng
+            //
+            // Lấy giá trị không đồng bộ của iv
             var iv = await _invoiceRepository.GetInVoiceAsync(staffId);
-            var st= await _staffRepository.GetStoreByStaffIdAsync(staffId);
+            // Lấy giá trị không đồng bộ của st
+            var st = await _staffRepository.GetStoreByStaffIdAsync(staffId);
+            //
+            //update revenue store
             st.Revenue = 0;
             foreach (var item in iv) 
             {         
