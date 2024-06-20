@@ -7,11 +7,12 @@ namespace BackEnd.Models;
 public partial class Store
 {
     public int StoreId { get; set; }
-    [StringLength(100)]
+    [Required(ErrorMessage = "StoreName is required")]
+    [StringLength(100, ErrorMessage = "StoreName must not exceed 100 characters")]
     public string StoreName { get; set; } = null!;
-    [StringLength(255)]
+    [StringLength(255, ErrorMessage = "Location must not exceed 255 characters")]
     public string? Location { get; set; }
-    [Range(0, double.MaxValue)]
+    [Range(0, 999999999999.99, ErrorMessage = "Revenue must be between 0 and 999999999999.99")]
     public decimal? Revenue { get; set; }
 
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
