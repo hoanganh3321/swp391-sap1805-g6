@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Card from "../../../../components/card";
 import ButtonCreate from "../../../../components/atom/ButtonCreate/ButtonCreate";
-import { Table, Form, Input, InputNumber, Button, Modal, Checkbox, Row, Col } from 'antd';
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import {
+  Table,
+  Form,
+  Input,
+  InputNumber,
+  Button,
+  Modal,
+  Checkbox,
+  Row,
+  Col,
+} from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 const CheckTable = (props) => {
   const { tableData } = props;
@@ -53,8 +64,39 @@ const CheckTable = (props) => {
     }
   };
 
-  const handleDelete = async (id) => {
-    console.log("Attempting to delete product with ProductId:", id);
+  //   const handleDelete = async (id) => {
+  //     console.log("Attempting to delete product with ProductId:", id);
+
+  //     if (!window.confirm("Are you sure you want to delete this product?")) {
+  //         return;
+  //     }
+  //     const token = localStorage.getItem('jwttoken');
+  //     try {
+  //         const response = await axios.delete(`https://localhost:7002/api/product/delete/${id}`, {
+  //             headers: {
+  //                 'Content-Type': 'application/json',
+  //                 'Authorization': `Bearer ${token}`
+  //             }
+  //         });
+
+  //         console.log("Fetch request completed with status:", response.status);
+
+  //         if (response.status !== 200) {
+  //             const errorData = response.data;
+  //             console.error('Error response:', errorData);
+  //             throw new Error(errorData.title || 'Failed to delete product');
+  //         }
+
+  //         console.log("Product deleted successfully, updating state.");
+  //         fetchData();
+  //         setErrorMessage('');
+  //     } catch (error) {
+  //         console.error('Delete error:', error);
+  //         setErrorMessage(error.response?.data?.title || error.message);
+  //     }
+  // };
+  const handleDelete = async (productId) => {
+    console.log("Attempting to delete product with ProductId:", productId);
 
     if (!window.confirm("Are you sure you want to delete this product?")) {
       return;
@@ -62,12 +104,12 @@ const CheckTable = (props) => {
 
     try {
       const response = await fetch(
-        `https://localhost:7002/api/product/delete/${id}`,
+        `https://localhost:7002/api/product/delete/${productId}`,
         {
-          method: 'DELETE',
+          method: "DELETE",
           headers: {
-            'Content-Type': 'application/json',
-          }
+            "Content-Type": "application/json",
+          },
         }
       );
 
@@ -75,15 +117,15 @@ const CheckTable = (props) => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error('Error response:', errorData);
-        throw new Error(errorData.title || 'Failed to delete product');
+        console.error("Error response:", errorData);
+        throw new Error(errorData.title || "Failed to delete product");
       }
 
       console.log("Product deleted successfully, updating state.");
       fetchData();
-      setErrorMessage('');
+      setErrorMessage("");
     } catch (error) {
-      console.error('Delete error:', error);
+      console.error("Delete error:", error);
       setErrorMessage(error.message);
     }
   };
@@ -102,17 +144,17 @@ const CheckTable = (props) => {
       const response = await fetch(
         `https://localhost:7002/api/product/update/${editingProduct.id}`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(values)
+          body: JSON.stringify(values),
         }
       );
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.title || 'Failed to update product');
+        throw new Error(errorData.title || "Failed to update product");
       }
 
       setIsEditModalOpen(false);
@@ -124,30 +166,30 @@ const CheckTable = (props) => {
 
   const columns = [
     {
-      title: 'Product Name',
-      dataIndex: 'productName',
-      key: 'productName',
+      title: "Product Name",
+      dataIndex: "productName",
+      key: "productName",
     },
     {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
     },
     {
-      title: 'Weight',
-      dataIndex: 'weight',
-      key: 'weight',
+      title: "Weight",
+      dataIndex: "weight",
+      key: "weight",
     },
     {
-      title: 'Quantity',
-      dataIndex: 'quantity',
-      key: 'quantity',
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
     },
     {
-      title: 'Action',
-      key: 'action',
+      title: "Action",
+      key: "action",
       render: (_, record) => (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: "flex" }}>
           <Button
             type="primary"
             icon={<EditOutlined />}
@@ -159,7 +201,7 @@ const CheckTable = (props) => {
           <Button
             type="danger"
             icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id)}
+            onClick={() => handleDelete(record.productId)}
           >
             Delete
           </Button>
@@ -205,7 +247,7 @@ const CheckTable = (props) => {
       </header>
 
       <div className="table-container">
-        <Table columns={columns} dataSource={data} pagination={false} />
+        <Table columns={columns} dataSource={data} pagination={true} />
       </div>
 
       <Modal
@@ -216,11 +258,7 @@ const CheckTable = (props) => {
           <Button key="back" onClick={() => setIsEditModalOpen(false)}>
             Cancel
           </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            onClick={() => form.submit()}
-          >
+          <Button key="submit" type="primary" onClick={() => form.submit()}>
             Save
           </Button>,
         ]}
@@ -236,60 +274,50 @@ const CheckTable = (props) => {
           <Form.Item
             label="Product Name"
             name="productName"
-            rules={[{ required: true, message: 'Please input the product name!' }]}
+            rules={[
+              { required: true, message: "Please input the product name!" },
+            ]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             label="Price"
             name="price"
-            rules={[{ required: true, message: 'Please input the price!' }]}
+            rules={[{ required: true, message: "Please input the price!" }]}
           >
             <InputNumber min={0} />
           </Form.Item>
           <Form.Item
             label="Weight"
             name="weight"
-            rules={[{ required: true, message: 'Please input the weight!' }]}
+            rules={[{ required: true, message: "Please input the weight!" }]}
           >
             <InputNumber min={0} />
           </Form.Item>
           <Form.Item
             label="Quantity"
             name="quantity"
-            rules={[{ required: true, message: 'Please input the quantity!' }]}
+            rules={[{ required: true, message: "Please input the quantity!" }]}
           >
             <InputNumber min={0} />
           </Form.Item>
           <Form.Item
             label="Warranty"
             name="warranty"
-            rules={[{ required: true, message: 'Please input the warranty!' }]}
-          >
-            <Input/>
-          </Form.Item>
-          <Form.Item
-            label="Image Link"
-            name="image"
+            rules={[{ required: true, message: "Please input the warranty!" }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Barcode"
-            name="barcode"
-          >
+          <Form.Item label="Image Link" name="image">
             <Input />
           </Form.Item>
-          <Form.Item
-            label="Manufacturing Cost"
-            name="manufacturingCost"
-          >
+          <Form.Item label="Barcode" name="barcode">
+            <Input />
+          </Form.Item>
+          <Form.Item label="Manufacturing Cost" name="manufacturingCost">
             <InputNumber min={0} />
           </Form.Item>
-          <Form.Item
-            label="Stone Cost"
-            name="stoneCost"
-          >
+          <Form.Item label="Stone Cost" name="stoneCost">
             <InputNumber min={0} />
           </Form.Item>
           <Form.Item
@@ -299,16 +327,10 @@ const CheckTable = (props) => {
           >
             <Checkbox />
           </Form.Item>
-          <Form.Item
-            label="Category ID"
-            name="categoryId"
-          >
+          <Form.Item label="Category ID" name="categoryId">
             <InputNumber min={0} />
           </Form.Item>
-          <Form.Item
-            label="Store ID"
-            name="storeId"
-          >
+          <Form.Item label="Store ID" name="storeId">
             <InputNumber min={0} />
           </Form.Item>
         </Form>

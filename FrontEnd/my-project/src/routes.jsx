@@ -4,7 +4,7 @@ import React from "react";
 import MainDashboard from "./views/admin/default";
 import NFTMarketplace from "./views/admin/marketplace";
 import DataTables from "./views/admin/tables";
-import GoldPrice from "./views/admin/goldricedisplay"
+import GoldPrice from "./views/admin/goldprice"
 
 // // Auth Imports
 // import SignIn from "views/auth/SignIn";
@@ -44,7 +44,7 @@ const routes = [
   {
     name: "Gold Price Display",
     layout: "/admin",
-    path: "goldpricedisplay",
+    path: "goldprice",
     icon: <MdLock className="w-6 h-6" />,
     component: <GoldPrice />,
   },

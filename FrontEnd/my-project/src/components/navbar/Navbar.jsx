@@ -1,35 +1,44 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
-import Dropdown from "../../components/dropdown/index";
 import { FiMenu } from "react-icons/fi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { IoCloseOutline } from "react-icons/io5";
 import { MdOutlineNotificationsActive } from "react-icons/md";
-
 import clsx from "clsx";
-import avatar from "../../assets/img/avatars/avatar3.png";
+import axios from "axios";
 
 export default function Navbar() {
   const [isSideMenuOpen, setMenu] = useState(false);
+  const navigate = useNavigate();
 
   const navlinks = [
     {
-      labe: "Sales",
+      label: "Sales",
       link: "#",
     },
     {
-      labe: "Products",
+      label: "Products",
       link: "#",
     },
     {
-      labe: "About",
+      label: "About",
       link: "#",
     },
     {
-      labe: "Contact",
+      label: "Contact",
       link: "#",
     },
   ];
+
+  const handleLogout = async () => {
+    try {
+      await axios.post("https://localhost:7002/api/admin/logout");
+      localStorage.removeItem('jwtToken');
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   return (
     <main>
@@ -50,9 +59,9 @@ export default function Navbar() {
             <Link
               key={i}
               className="hidden lg:block hover:text-black text-hemp"
-              href={d.link}
+              to={d.link}
             >
-              {d.labe}
+              {d.label}
             </Link>
           ))}
         </div>
@@ -60,7 +69,7 @@ export default function Navbar() {
         {/* sidebar mobile menu */}
         <div
           className={clsx(
-            " fixed h-full w-screen lg:hidden bg-black/50  backdrop-blur-sm top-0 right-0  -translate-x-full  transition-all ",
+            "fixed h-full w-screen lg:hidden bg-black/50 backdrop-blur-sm top-0 right-0 -translate-x-full transition-all",
             isSideMenuOpen && "translate-x-0"
           )}
         >
@@ -71,8 +80,8 @@ export default function Navbar() {
             />
 
             {navlinks.map((d, i) => (
-              <Link key={i} className="font-bold" href={d.link}>
-                {d.labe}
+              <Link key={i} className="font-bold" to={d.link}>
+                {d.label}
               </Link>
             ))}
           </section>
@@ -83,6 +92,12 @@ export default function Navbar() {
             <AiOutlineShoppingCart />
           </Link>
           <MdOutlineNotificationsActive className="mr-8 text-2xl cursor-pointer" />
+          {/* Nút Logout */}
+          <button 
+            onClick={handleLogout} 
+            className="px-3 py-1 text-lg rounded cursor-pointer text-hemp bg-bloom">
+            Logout
+          </button>
         </div>
       </nav>
       <hr className="" />

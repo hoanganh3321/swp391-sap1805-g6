@@ -1,53 +1,51 @@
-import React from "react";
-import BannerImg from "../../assets/img/banner/jewelry.jpg";
-import { GrSecure } from "react-icons/gr";
-import { IoFastFood } from "react-icons/io5";
-import { GiFoodTruck } from "react-icons/gi";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const Banner = () => {
+  const [goldPrices, setGoldPrices] = useState([]);
+
+  useEffect(() => {
+    const fetchGoldPrices = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7002/api/GoldPriceDisplay/getAllGoldPrice"
+        );
+        setGoldPrices(response.data);
+      } catch (error) {
+        console.error("Error fetching gold prices:", error);
+      }
+    };
+
+    fetchGoldPrices();
+  }, []);
+
   return (
     <div className="min-h-[550px] flex justify-center items-center py-12 sm:py-0">
       <div className="container">
         <div className="grid items-center grid-cols-1 gap-6 sm:grid-cols-2">
-          {/* image section */}
-          <div data-aos="zoom-in">
-            <img
-              src={BannerImg}
-              alt=""
-              className="max-w-[400px] h-[350px] w-full mx-auto drop-shadow-[-10px_10px_12px_rgba(0,0,0,1)] object-cover"
-            />
-          </div>
-
-          {/* text details section */}
-          <div className="flex flex-col justify-center gap-6 sm:pt-0">
+          {/* gold price table section */}
+          <div data-aos="zoom-in" className="p-6 bg-white rounded-lg shadow-lg">
             <h1 data-aos="fade-up" className="text-3xl font-bold sm:text-4xl text-bloom">
-              Summer Sale upto 50% Off
+              Gold Price
             </h1>
-            <p
-              data-aos="fade-up"
-              className="text-sm leading-5 tracking-wide text-gray-500"
-            >
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque
-              reiciendis inventore iste ratione ex alias quis magni at optio
-            </p>
-            <div className="flex flex-col gap-4">
-              <div data-aos="fade-up" className="flex items-center gap-4">
-                <GrSecure className="w-12 h-12 p-4 text-4xl rounded-full shadow-sm bg-violet-100 dark:bg-violet-400" />
-                <p>Quality Products</p>
-              </div>
-              <div data-aos="fade-up" className="flex items-center gap-4">
-                <IoFastFood className="w-12 h-12 p-4 text-4xl bg-orange-100 rounded-full shadow-sm dark:bg-orange-400" />
-                <p>Fast Delivery</p>
-              </div>
-              <div data-aos="fade-up" className="flex items-center gap-4">
-                <GiFoodTruck className="w-12 h-12 p-4 text-4xl bg-green-100 rounded-full shadow-sm dark:bg-green-400" />
-                <p>Easy Payment method</p>
-              </div>
-              <div data-aos="fade-up" className="flex items-center gap-4">
-                <GiFoodTruck className="w-12 h-12 p-4 text-4xl bg-yellow-100 rounded-full shadow-sm dark:bg-yellow-400" />
-                <p>Get Offers</p>
-              </div>
-            </div>
+            <table className="w-full mt-4">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="px-4 py-2">DeviceId</th>
+                  <th className="px-4 py-2">Location</th>
+                  <th className="px-4 py-2">GoldPrice</th>
+                </tr>
+              </thead>
+              <tbody className="text-center">
+                {goldPrices.map((goldPrice) => (
+                  <tr key={goldPrice.displayId} className="border-b border-gray-200">
+                    <td className="px-4 py-2">{goldPrice.deviceId}</td>
+                    <td className="px-4 py-2">{goldPrice.location}</td>
+                    <td className="px-4 py-2 text-green-500">{goldPrice.goldPrice}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

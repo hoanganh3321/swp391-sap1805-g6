@@ -7,6 +7,7 @@ const ButtonCreate = ({ isOpen, onClose }) => {
   const handleSubmit = async (values) => {
     const productData = {
       productName: values.productName,
+      price: values.price,
       barcode: values.barcode,
       productPrice: values.productPrice,
       weight: values.weight,
@@ -17,7 +18,7 @@ const ButtonCreate = ({ isOpen, onClose }) => {
       isBuyback: values.isBuyback,
       categoryId: values.categoryId,
       storeId: values.storeId,
-      imageUrl: values.image,
+      image: values.image,
     };
 
     try {
@@ -36,11 +37,9 @@ const ButtonCreate = ({ isOpen, onClose }) => {
         onClose();
       } else {
         console.error("Error adding product:", response.status, response.statusText);
-        // Optionally handle specific error cases or display user-friendly messages
       }
     } catch (error) {
       console.error("Error:", error);
-      // Handle network errors or other exceptions
     }
   };
 
@@ -79,8 +78,8 @@ const ButtonCreate = ({ isOpen, onClose }) => {
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
-              name="productPrice"
-              label="Product Price"
+              name="price"
+              label="Price"
               rules={[{ required: true, message: 'Please input the product price!' }]}
             >
               <InputNumber min={0} className="w-full" />
@@ -167,7 +166,7 @@ const ButtonCreate = ({ isOpen, onClose }) => {
           </Col>
           <Col span={12}>
             <Form.Item
-              name="imageUrl"
+              name="image"
               label="Image URL"
               rules={[{ required: true, message: 'Please input the image URL!' }]}
             >
