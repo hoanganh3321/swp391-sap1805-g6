@@ -14,7 +14,7 @@ namespace BackEnd.Reporitories
 
         public async Task<IEnumerable<Store>> GetAllAsync()
         {
-            return await _context.Set<Store>().ToListAsync();
+            return await _context.Set<Store>().Include(od=>od.Staff).ThenInclude(od=>od.Invoices).ToListAsync();
         }
 
         public async Task<Store?> GetByIdAsync(int id)
