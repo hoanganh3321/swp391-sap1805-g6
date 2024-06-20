@@ -22,8 +22,11 @@ namespace BackEnd.Reporitories
         public async Task<IEnumerable<Order>> GetOrderDetailsByCusIdAsync(int? customerId)
         {
             return await _context.Orders
-                                 .Where(od => od.CustomerId == customerId).Include(od=>od.OrderDetails)
-                                 .Include(od => od.Customer).ThenInclude(od => od.LoyaltyPoints)
+                                 .Where(od => od.CustomerId == customerId)
+                                 .Include(od => od.OrderDetails)
+                                     .ThenInclude(od => od.Product)                                    
+                                 .Include(od => od.Customer)
+                                     .ThenInclude(c => c.LoyaltyPoints)
                                  .ToListAsync();
         }
 

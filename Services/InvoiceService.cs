@@ -45,7 +45,7 @@ namespace BackEnd.Services
             {
                 throw new ArgumentNullException(nameof(orderId));
             }
-
+            //
             // Lấy giá trị không đồng bộ của PriceWithNoPromotion
             var priceWithNoPromotion = await _orderRepository.GetPriceWithNoPromotionAsync(orderId);
             // Lấy giá trị không đồng bộ của customerId
@@ -55,7 +55,7 @@ namespace BackEnd.Services
             {
                 throw new InvalidOperationException("Customer not found for the given order.");
             }
-
+            ///
             // Lấy giá trị không đồng bộ của loyalty points
             var loyalPointOfCustomer = await _customerRepository.GetCustomerLoyalPointByCustomerId1(customerId);
             if (loyalPointOfCustomer == null)
@@ -71,15 +71,15 @@ namespace BackEnd.Services
                 .Where(p => customerLoyaltyPoints >= p.Points)
                 .OrderByDescending(p => p.Points)
                 .FirstOrDefault();
-
+            //
             if (applicablePromotion == null)
             {
                 throw new InvalidOperationException("Customer does not have enough loyalty points for any promotion.");
             }
-
+            //
             // Tính toán giá trị cuối cùng dựa trên khuyến mại
             var totalPrice = priceWithNoPromotion * applicablePromotion.Discount;
-
+            //
             var invoice = new Invoice()
             {
                 OrderId = orderId.Value,
@@ -88,7 +88,7 @@ namespace BackEnd.Services
                 TotalPrice = totalPrice,
                 StaffId = staffId 
             };
-
+            //
             await _invoiceRepository.AddInvoiceAsync(invoice);
             // cập nhật lại doanh thu của cửa hàng nơi mà staff làm việc đặt hàng
             //
@@ -103,8 +103,7 @@ namespace BackEnd.Services
             {         
                 st.Revenue += item.TotalPrice;   
             }
-            await _storeRepository.UpdateRevenStoreAsync(st);
-            
+            await _storeRepository.UpdateRevenStoreAsync(st);         
         }
 
 
