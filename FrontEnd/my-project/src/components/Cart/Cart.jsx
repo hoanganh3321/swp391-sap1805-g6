@@ -40,9 +40,9 @@ function Cart() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            customerId: 1, // Replace with actual customerId
+            customerId: 1, 
             ProductID: productId,
-            Quantity: quantity, // Use selected quantity
+            Quantity: quantity, 
           }),
       });
       if (!response.ok) {
@@ -69,7 +69,7 @@ function Cart() {
           </div>
           <div className="flex flex-wrap mt-10 mb-5">
             <h3 className="w-2/5 text-xs font-semibold text-gray-600 uppercase">Product Details</h3>
-            {/* <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Quantity</h3> */}
+            <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Quantity</h3>
             <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Price</h3>
             <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Total</h3>
           </div>
@@ -78,7 +78,10 @@ function Cart() {
               <div key={cart?.orderDetailId} className="flex items-center px-6 py-5 -mx-8 hover:bg-gray-100">
                 <div className="flex w-2/5">
                   <div className="w-20">
-                    <img className="h-24" alt={cart?.productName} />
+                    <img className="h-24" src={cart?.product?.image} alt=''/>
+                  </div>
+                  <div className="w-20">
+                    <span className="flex flex-col justify-between flex-grow ml-4"/>{cart?.product?.productName}
                   </div>
                   <div className="flex flex-col justify-between flex-grow ml-4">
                     <span className="text-sm font-bold">{cart?.productId}</span>
@@ -90,6 +93,7 @@ function Cart() {
                     </div>
                   </div>
                 </div>
+                <span className="w-1/5 text-sm font-semibold text-center">{cart?.quantity}</span>
                 <span className="w-1/5 text-sm font-semibold text-center">{cart?.unitPrice}</span>
                 <span className="w-1/5 text-sm font-semibold text-center">{(cart?.unitPrice * cart?.quantity).toFixed(2)}</span>
               </div>        

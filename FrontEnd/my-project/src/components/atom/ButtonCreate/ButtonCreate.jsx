@@ -22,18 +22,26 @@ const ButtonCreate = ({ isOpen, onClose }) => {
     };
 
     try {
+      // Retrieve the token from localStorage
+      const token = localStorage.getItem("token");
+
+      // Check if the token exists
+      if (!token) {
+        throw new Error("No token found. Please log in.");
+      }
+
       const response = await fetch("https://localhost:7002/api/product/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`, 
         },
         body: JSON.stringify(productData),
       });
-  
+
       if (response.ok) {
         console.log("Product added successfully");
-        form.resetFields(); 
+        form.resetFields();
         onClose();
       } else {
         console.error("Error adding product:", response.status, response.statusText);
@@ -42,6 +50,7 @@ const ButtonCreate = ({ isOpen, onClose }) => {
       console.error("Error:", error);
     }
   };
+
 
   return (
     <Modal

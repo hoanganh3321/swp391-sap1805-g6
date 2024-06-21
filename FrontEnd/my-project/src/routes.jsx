@@ -42,7 +42,7 @@ const routes = [
     component: <DataTables />,
   },
   {
-    name: "Gold Price Display",
+    name: "Gold Price",
     layout: "/admin",
     path: "goldprice",
     icon: <MdLock className="w-6 h-6" />,

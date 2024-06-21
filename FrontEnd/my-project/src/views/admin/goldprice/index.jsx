@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Table, Modal, Form, Input, Button, Popconfirm, message } from "antd";
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Card from "../../../components/card";
 
 const GoldPriceTable = () => {
@@ -8,7 +9,7 @@ const GoldPriceTable = () => {
   const [loading, setLoading] = useState(true);
   const [searchId, setSearchId] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editData, setEditData] = useState(null); // To store data for editing
+  const [editData, setEditData] = useState(null);
 
   useEffect(() => {
     fetchGoldPrices();
@@ -29,11 +30,21 @@ const GoldPriceTable = () => {
 
   const handleSearch = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found. Please log in.");
+      }
+  
       if (searchId.trim() === "") {
         fetchGoldPrices();
       } else {
         const response = await axios.get(
-          `https://localhost:7002/api/GoldPriceDisplay/GetGoldPriceById/${searchId}`
+          `https://localhost:7002/api/GoldPriceDisplay/GetGoldPriceById/${searchId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setGoldPrices([response.data]);
         setLoading(false);
@@ -43,120 +54,85 @@ const GoldPriceTable = () => {
       setLoading(false);
     }
   };
-//   const handleSearch = async () => {
-//     try {
-//       if (searchId.trim() === "") {
-//         fetchGoldPrices();
-//       } else {
-//         const token = "your_jwt_token_here"; // Replace with your actual JWT token
-//         const config = {
-//           headers: {
-//             Authorization: `Bearer ${token}`
-//           }
-//         };
-  
-//         const response = await axios.get(
-//           `https://localhost:7002/api/GoldPriceDisplay/GetGoldPriceById/${searchId}`,
-//           config
-//         );
-//         setGoldPrices([response.data]);
-//         setLoading(false);
-//       }
-//     } catch (error) {
-//       console.error("Error searching gold prices by ID:", error);
-//       setLoading(false);
-//     }
-//   };
   
 
-  const handleAddGoldPrice = async (values) => {
-    try {
-      await axios.post(
-        "https://localhost:7002/api/GoldPriceDisplay/AddGoldPrice",
-        values
-      );
-      setIsModalOpen(false);
-      fetchGoldPrices();
-      message.success("Gold price added successfully");
-    } catch (error) {
-      console.error("Error adding gold price:", error);
-      message.error("Failed to add gold price");
+const handleAddGoldPrice = async (values) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No token found. Please log in.");
     }
-  };
 
-  const handleEditGoldPrice = async () => {
-    try {
-        await axios.put(
-        `https://localhost:7002/api/GoldPriceDisplay/UpdateGoldPrice/${editData.displayId}`,
-        editData
-      );
+    await axios.post(
+      "https://localhost:7002/api/GoldPriceDisplay/AddGoldPrice",
+      values,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Set the Authorization header
+        },
+      }
+    );
+
+    setIsModalOpen(false);
+    fetchGoldPrices();
+    message.success("Gold price added successfully");
+  } catch (error) {
+    console.error("Error adding gold price:", error);
+    message.error("Failed to add gold price");
+  }
+};
+
+
+const handleEditGoldPrice = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No token found. Please log in.");
+    }
+    const response = await axios.put(
+      `https://localhost:7002/api/GoldPriceDisplay/UpdateGoldPrice/${editData.displayId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
       setIsModalOpen(false);
       fetchGoldPrices();
       message.success("Gold price updated successfully");
-    } catch (error) {
-      console.error("Error updating gold price:", error);
-      message.error("Failed to update gold price");
+    } else {
+      throw new Error("Failed to update gold price");
     }
-  };
-//   const handleEditGoldPrice = async () => {
-//     try {
-//       const token = "your_jwt_token_here"; // Replace with your actual JWT token
-//       const config = {
-//         headers: {
-//           Authorization: `Bearer ${token}`
-//         }
-//       };
-  
-//       await axios.put(
-//         `https://localhost:7002/api/GoldPriceDisplay/UpdateGoldPrice/${editData.displayId}`,
-//         editData,
-//         config
-//       );
-  
-//       setIsModalOpen(false);
-//       fetchGoldPrices();
-//       message.success("Gold price updated successfully");
-//     } catch (error) {
-//       console.error("Error updating gold price:", error);
-//       message.error("Failed to update gold price");
-//     }
-//   };
-  
+  } catch (error) {
+    console.error("Error updating gold price:", error);
+    message.error("Failed to update gold price");
+  }
+};
 
-  const handleDeleteGoldPrice = async (displayId) => {
-    try {
-      await axios.delete(
-        `https://localhost:7002/api/GoldPriceDisplay/DeleteGoldPrice/${displayId}`
-      );
-      fetchGoldPrices();
-      message.success("Gold price deleted successfully");
-    } catch (error) {
-      console.error("Error deleting gold price:", error);
-      message.error("Failed to delete gold price");
+
+const handleDeleteGoldPrice = async (displayId) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("No token found. Please log in.");
     }
-  };
-//   const handleDeleteGoldPrice = async (displayId) => {
-//     try {
-//       const token = "your_jwt_token_here"; // Replace with your actual JWT token
-//       const config = {
-//         headers: {
-//           Authorization: `Bearer ${token}`
-//         }
-//       };
-  
-//       await axios.delete(
-//         `https://localhost:7002/api/GoldPriceDisplay/DeleteGoldPrice/${displayId}`,
-//         config
-//       );
-  
-//       fetchGoldPrices();
-//       message.success("Gold price deleted successfully");
-//     } catch (error) {
-//       console.error("Error deleting gold price:", error);
-//       message.error("Failed to delete gold price");
-//     }
-//   };
-  
+    await axios.delete(
+      `https://localhost:7002/api/GoldPriceDisplay/DeleteGoldPrice/${displayId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    fetchGoldPrices();
+    message.success("Gold price deleted successfully");
+  } catch (error) {
+    console.error("Error deleting gold price:", error);
+    message.error("Failed to delete gold price");
+  }
+};
 
   const handleEditModalOpen = (record) => {
     setEditData(record);
@@ -188,22 +164,28 @@ const GoldPriceTable = () => {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      align: "center",
       render: (text, record) => (
-        <span>
-          <Button type="link" onClick={() => handleEditModalOpen(record)}>
-            Edit
+        <span style={{ display: "flex", justifyContent: "center" }}>
+        <Button
+          type="link"
+          icon={<EditOutlined />}
+          onClick={() => handleEditModalOpen(record)}
+          style={{ marginRight: 8 }}
+        >
+          Edit
+        </Button>
+        <Popconfirm
+          title="Are you sure delete this gold price?"
+          onConfirm={() => handleDeleteGoldPrice(record.displayId)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button type="link" icon={<DeleteOutlined />} danger>
+            Delete
           </Button>
-          <Popconfirm
-            title="Are you sure delete this gold price?"
-            onConfirm={() => handleDeleteGoldPrice(record.displayId)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="link" danger>
-              Delete
-            </Button>
-          </Popconfirm>
-        </span>
+        </Popconfirm>
+      </span>
       ),
     },
   ];
@@ -254,7 +236,7 @@ const GoldPriceTable = () => {
       >
         <GoldPriceForm
           onFinish={editData ? handleEditGoldPrice : handleAddGoldPrice}
-          initialValues={editData} // Pass editData to pre-fill form in case of edit
+          initialValues={editData}
         />
       </Modal>
     </Card>
@@ -265,17 +247,17 @@ const GoldPriceForm = ({ onFinish, initialValues }) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    form.resetFields(); // Reset form fields when the modal is opened or closed
+    form.resetFields();
     if (initialValues) {
-      form.setFieldsValue(initialValues); // Set initial values if provided (for edit)
+      form.setFieldsValue(initialValues); 
     }
   }, [initialValues, form]);
 
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      onFinish(values); // Call onFinish callback with form values
-      form.resetFields(); // Reset form fields after submission
+      onFinish(values); 
+      form.resetFields(); 
     } catch (error) {
       console.error("Validation failed:", error);
     }
@@ -283,6 +265,15 @@ const GoldPriceForm = ({ onFinish, initialValues }) => {
 
   return (
     <Form form={form} onFinish={handleSubmit}>
+      {initialValues && (
+        <Form.Item
+          name="displayId"
+          label="Display ID"
+          rules={[{ required: true, message: "Please enter Display ID" }]}
+        >
+          <Input placeholder="Enter Display ID" disabled />
+        </Form.Item>
+      )}
       <Form.Item
         name="deviceId"
         label="Device ID"
