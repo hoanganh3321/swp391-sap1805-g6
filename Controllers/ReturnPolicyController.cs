@@ -55,7 +55,7 @@ namespace BackEnd.Controllers
         //https://localhost:7002/api/ReturnPolicy/update/{id}
         //ok
         [HttpPut("update/{id}")]
-        //[AdminAuthorize]  
+        [AdminAuthorize]  
         public async Task<IActionResult> UpdateReturnPolicy(int id, ReturnPolicy returnPolicy)
         {
             int? admin = _httpContextAccessor.HttpContext.GetAdminId();
@@ -70,7 +70,7 @@ namespace BackEnd.Controllers
 
         //https://localhost:7002/api/product/delete/{id}
         [HttpDelete("delete/{id}")]
-        //[AdminAuthorize]
+        [AdminAuthorize]
         public async Task<IActionResult> DeleteReturnPolicy(int id)
         {
             int? admin = _httpContextAccessor.HttpContext.GetAdminId();

@@ -208,6 +208,7 @@ CREATE TABLE GoldPriceDisplay (
 );
 drop table GoldPriceDisplay
 -- Tạo bảng Invoice
+delete from Invoice
 CREATE TABLE Invoice (
     InvoiceID INT PRIMARY KEY IDENTITY(1,1), -- Khóa chính, tự tăng
     OrderID INT, -- Khóa ngoại liên kết với bảng Order

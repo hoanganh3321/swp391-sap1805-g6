@@ -1,4 +1,5 @@
 ﻿using BackEnd.Attributes;
+using BackEnd.Exceptions;
 using BackEnd.Extensions;
 using BackEnd.Models;
 using BackEnd.Services;
@@ -159,10 +160,27 @@ namespace BackEnd.Controllers
         [StaffAuthorize]
         public async Task<IActionResult> AddPromotionToInvoice(int orderId)
         {
-            int? staffId = _httpContextAccessor.HttpContext.GetStaffId();
-            if (staffId == null) { throw new Exception("phien dang nhap het han");}
-            await _invoiceService.AddInvoiceAsync(orderId,staffId);
-            return Ok();
+            try
+            {
+                int? staffId =  _httpContextAccessor.HttpContext.GetStaffId();
+                if (staffId == null)
+                {
+                    return BadRequest("Phiên đăng nhập hết hạn");
+                }
+
+                await _invoiceService.AddInvoiceAsync(orderId, staffId);
+                return Ok();
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi nếu cần thiết
+                return StatusCode(500, "An unexpected fault happened. Try again later.");
+            }
         }
+
     }
 }

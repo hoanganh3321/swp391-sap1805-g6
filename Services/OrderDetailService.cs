@@ -4,6 +4,7 @@ using BackEnd.Models;
 using BackEnd.Reporitories;
 using BackEnd.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace BackEnd.Services
@@ -275,10 +276,10 @@ namespace BackEnd.Services
             decimal? uni = await _orderDetailRepository.FindUni(cartmodel.ProductID, orderId);
             int? quan = await _orderDetailRepository.FindQuan(cartmodel.ProductID, orderId);
             int? odid = await _orderDetailRepository.FindOdId(orderId);
-            //
+            // check xem khách hàng hiện tại đã mua hàng lần nào chưa 
             var findProResult = await _orderDetailRepository.FindPro(cartmodel.ProductID, orderId);
             if (findProResult == cartmodel.ProductID
-                && odid == orderId)
+                && odid == orderId)//nếu rồi
 
             {
                 var orderDetail = new OrderDetail
@@ -288,10 +289,11 @@ namespace BackEnd.Services
                     Quantity = (cartmodel.Quantity) + quan,
                     UnitPrice = uni + (product.Price * cartmodel.Quantity)
                 };
+                //gọi hàm update
                 await _orderDetailRepository.UpdateOrderDetail(orderDetail);
             }
             else
-            {
+            {// nếu chưa
                 var orderDetail = new OrderDetail
                 {
                     OrderId = orderId,
@@ -299,7 +301,7 @@ namespace BackEnd.Services
                     Quantity = cartmodel.Quantity,
                     UnitPrice = product.Price * cartmodel.Quantity
                 };
-                // Add order detail to repository
+                // gọi hàm add
                 await _orderDetailRepository.AddOrderDetailAsync(orderDetail);
             }
             // Update order total amount and order date
@@ -328,8 +330,6 @@ namespace BackEnd.Services
             // Update product quantity
             product.Quantity -= cartmodel.Quantity;
             await _productRepository.UpdateProductAsync(product.ProductId, product);
-
-
         }
 
         //delete from cart
@@ -343,7 +343,7 @@ namespace BackEnd.Services
                 throw new Exception("Product not found");
             }
 
-            // Get customer ID from HttpContext
+            // Get staff ID from HttpContext
             var currentStaff = _httpContextAccessor.HttpContext.GetStaffId();
             if (currentStaff == null)
             {
@@ -366,26 +366,48 @@ namespace BackEnd.Services
                 // Get the OrderID from HttpContext
                 var orderId = _httpContextAccessor.HttpContext.GetOrderId();
 
-                //update orderDetail
+                // Update orderDetail
                 decimal? uni = await _orderDetailRepository.FindUni(deleteCartView.ProductID, orderId);
                 int? quan = await _orderDetailRepository.FindQuan(deleteCartView.ProductID, orderId);
-//            
+                if (quan == null) { quan = 0; }
+                var dkm = await _orderRepository.GetOrderByIdAsync2(orderId);
+
                 if (quan - (deleteCartView.Quantity) == 0)
                 {
+                    // Xóa chi tiết đơn hàng
                     await _orderDetailRepository.DeleteOrderDetailAsync(deleteCartView.ProductID, orderId);
 
-                    //update totalamount 
-                    await _orderRepository.DeleteOrderAsync(orderId);
+                    // Kiểm tra xem có chi tiết đơn hàng nào khác còn lại không
+                    var orderDetails = await _orderDetailRepository.GetOrderDetailsAsync(orderId);
 
-                    // Update product quantity
+                    if (dkm != null)
+                    {
+                        if (orderDetails.Any())
+                        {
+                            // Cập nhật tổng số tiền của đơn hàng
+                            dkm.TotalAmount = orderDetails.Sum(detail => detail.UnitPrice);
+
+                            // Set order date
+                            dkm.OrderDate = DateTime.Now;
+
+                            // Update order total price
+                            await _orderRepository.UpdateOrderAsync(dkm);
+                        }
+                        else
+                        {
+                            // Xóa đơn hàng nếu không còn chi tiết đơn hàng nào khác
+                           await _orderRepository.DeleteOrderAsync(orderId);
+                        }
+                    }
+                    // Cập nhật số lượng sản phẩm
                     product.Quantity += deleteCartView.Quantity;
                     await _productRepository.UpdateProductAsync(product.ProductId, product);
-//
                 }
+
                 else if (quan - (deleteCartView.Quantity) < 0)
                 {
                     throw new Exception($"sản phẩm với mã {deleteCartView.ProductID} " +
-                        $"hiện có số lượng tại rỏ là {quan} không đủ để xóa hãy đặt hêm");
+                        $"hiện có số lượng tại giỏ là {quan} không đủ để xóa hãy đặt hêm");
                 }
 //
                 else
@@ -400,22 +422,22 @@ namespace BackEnd.Services
                     //update orderDetail
                     await _orderDetailRepository.UpdateOrderDetail(orderDetail);
                     // Update order total amount and order date
-                    var dkm = await _orderRepository.GetOrderByIdAsync2(orderId);
-                    if (dkm != null)
+                    var dcm = await _orderRepository.GetOrderByIdAsync2(orderId);
+                    if (dcm != null)
                     {
                         var orderDetails = await _orderDetailRepository.GetOrderDetailsAsync(orderId);
                         if (orderDetails.Any())
                         {
-                            dkm.TotalAmount = 0; // Khởi tạo TotalAmount
+                            dcm.TotalAmount = 0; // Khởi tạo TotalAmount
                             foreach (var detail in orderDetails)
                             {
-                                dkm.TotalAmount += detail.UnitPrice;
+                                dcm.TotalAmount += detail.UnitPrice;
                             }
                             // Set order date
-                            dkm.OrderDate = DateTime.Now;
+                            dcm.OrderDate = DateTime.Now;
 
                             // Update order total price
-                            await _orderRepository.UpdateOrderAsync(dkm);
+                            await _orderRepository.UpdateOrderAsync(dcm);
                         }
                     }
                     else
@@ -431,10 +453,7 @@ namespace BackEnd.Services
 
         public async Task<IEnumerable<Order>> StaffViewCartAsync(int? customerId)
         {
-
             return await _orderDetailRepository.GetOrderDetailsByCusIdAsync(customerId);
-            //luu lai orderId
-            
         }
 
     }

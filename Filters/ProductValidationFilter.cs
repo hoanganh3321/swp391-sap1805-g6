@@ -5,8 +5,10 @@
     using Microsoft.AspNetCore.Mvc.Filters;
     using System;
 
+    
     public class ProductValidationFilter : ActionFilterAttribute
     {
+        //OnActionExecuting : được gọi trước khi hành động controller được thực hiện. 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (context.ActionArguments.TryGetValue("product", out object productObj ))

@@ -1,4 +1,6 @@
-﻿using BackEnd.Models;
+﻿using BackEnd.Exceptions;
+using BackEnd.Filters;
+using BackEnd.Models;
 using BackEnd.Reporitories;
 using BackEnd.ViewModels;
 
@@ -12,6 +14,7 @@ namespace BackEnd.Services
         private readonly IStaffRepository _staffRepository;
         private readonly IStoreRepository _storeRepository;
         private readonly IPromotionService _promotionService;
+      
 
 
         public InvoiceService(IInvoiceRepository invoiceRepository,
@@ -27,6 +30,7 @@ namespace BackEnd.Services
             _staffRepository = staffRepository;
             _storeRepository = storeRepository;
             _promotionService = promotionService;
+            
         }
 
         public async Task<Invoice?> GetInvoiceByIdAsync(int? orderId)
@@ -48,8 +52,10 @@ namespace BackEnd.Services
             //
             // Lấy giá trị không đồng bộ của PriceWithNoPromotion
             var priceWithNoPromotion = await _orderRepository.GetPriceWithNoPromotionAsync(orderId);
+            if(priceWithNoPromotion == null) { throw new BadRequestException("Khách hàng chưa đặt hàng, vui lòng đặt hàng trước khi giao dịch được thực hiện"); }
             // Lấy giá trị không đồng bộ của customerId
             var customerId = await _orderRepository.SearchCustomerByOrderId(orderId);
+            if (customerId == null) { throw new BadRequestException("Khách hàng chưa đặt hàng, vui lòng đặt hàng trước khi giao dịch được thực hiện"); }
             // Chờ để hoàn thành các nhiệm vụ không đồng bộ
             if (customerId == null)
             {

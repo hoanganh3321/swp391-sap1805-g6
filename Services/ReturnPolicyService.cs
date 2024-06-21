@@ -33,7 +33,7 @@ namespace BackEnd.Services
         public async Task<bool> UpdateReturnPolicyAsync(int id, ReturnPolicy returnPolicy)
         {
             // Validate the policy description before updating
-            if (!ValidatePolicyDescription(returnPolicy))
+            if (!ValidatePolicyDescription(returnPolicy))//no no => yes null yes blank
             {
                 throw new ArgumentException("Description is not valid.");
             }
@@ -42,7 +42,7 @@ namespace BackEnd.Services
         }
         private bool ValidatePolicyDescription(ReturnPolicy returnPolicy)
         {
-            return !string.IsNullOrWhiteSpace(returnPolicy.Description);
+            return !string.IsNullOrWhiteSpace(returnPolicy.Description);//no null no blank
         }
     }
 }

@@ -50,8 +50,8 @@ namespace BackEnd.Controllers
         //https://localhost:7002/api/product/add
         //ok
         [HttpPost("add")]
-        [ProductValidationFilter]
-        [AdminAuthorize]
+        [ProductValidationFilter]// VALIDATE PRODUCT 
+        [AdminAuthorize]// KIEM TRA QUYEN TRUY CAP
 
         public async Task<IActionResult> AddProduct( Product product)
         {

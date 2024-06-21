@@ -14,15 +14,18 @@ namespace BackEnd.Services
         private readonly ILoyalPointRepository _repository;
         private readonly ICustomerRepository _customerRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly IProductRepository _productRepository;
 
 
         public LoyalPointService(ILoyalPointRepository repository, 
             ICustomerRepository customerRepository,
-            IOrderRepository orderRepository)
+            IOrderRepository orderRepository,
+            IProductRepository productRepository)
         {
             _repository = repository;
             _customerRepository = customerRepository;
             _orderRepository = orderRepository;
+            _productRepository = productRepository;
         }
 
         public async Task<IEnumerable<LoyaltyPoint>> GetAllAsync()
@@ -37,6 +40,7 @@ namespace BackEnd.Services
 
         public async Task AddAsync(OrderViewModel orderViewModel)
         {
+            var product = await _productRepository.GetProductByIdAsync(orderViewModel.ProductID);
             var customer = await _customerRepository.GetCustomerByIdAsync(orderViewModel.customerId);
             if (customer == null)
             {
@@ -46,8 +50,8 @@ namespace BackEnd.Services
             var existingLoyalty = await _repository.GetLoyalty(orderViewModel.customerId);
             if (existingLoyalty == null)
             {
-                decimal? total = await _orderRepository.GetTotalAmountAsync(orderViewModel.customerId);
-                if (total >= 10000)
+             //   decimal? total = await _orderRepository.GetTotalAmountAsync(orderViewModel.customerId);
+                if (product.Price * orderViewModel.Quantity >= 12000)
                 {
                     var point = new LoyaltyPoint
                     {
@@ -61,8 +65,8 @@ namespace BackEnd.Services
             else
             {
                 var currentPoint = await _repository.GetPoints(orderViewModel.customerId);
-                decimal? total = await _orderRepository.GetTotalAmountAsync(orderViewModel.customerId);
-                if (total >= 10000)
+              //  decimal? total = await _orderRepository.GetTotalAmountAsync(orderViewModel.customerId);
+                if (product.Price * orderViewModel.Quantity >= 12000)
                 {
                     var point2 = new LoyaltyPoint
                     {
@@ -84,6 +88,7 @@ namespace BackEnd.Services
 
         public async Task DeleteAsync(StaffDeleteModel staffDeleteModel)
         {
+            var product = await _productRepository.GetProductByIdAsync(staffDeleteModel.ProductID);
             var customer = await _customerRepository.GetCustomerByIdAsync(staffDeleteModel.customerId);
             if (customer == null)
             {
@@ -97,9 +102,9 @@ namespace BackEnd.Services
             else
             {
                 var currentPoint = await _repository.GetPoints(staffDeleteModel.customerId);
-                decimal? total = await _orderRepository.GetTotalAmountAsync(staffDeleteModel.customerId);
+             //   decimal? total = await _orderRepository.GetTotalAmountAsync(staffDeleteModel.customerId);
 
-                if (total >= 10000)
+                if (product.Price * staffDeleteModel.Quantity > 12000)
                 {
                     var point2 = new LoyaltyPoint
                     {

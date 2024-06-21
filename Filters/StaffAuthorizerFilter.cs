@@ -7,13 +7,15 @@ using BackEnd.Models;
 
 namespace BackEnd.Filters
 {
-    public class StaffAuthorizerFilter : IAsyncAuthorizationFilter
+    //REFERENCE NGUYEN DUC HOANG BKHN https://www.facebook.com/nguyen.duc.hoang.bk
+    public class StaffAuthorizerFilter : IAsyncAuthorizationFilter // kiểm tra quyền truy cập trong ASP.NET Core để đảm bảo rằng chỉ những người dùng có quyền STAFF mới được phép truy cập vào các hành động cụ thể của controller.
     {
         private readonly IConfiguration _config;
         public StaffAuthorizerFilter(IConfiguration config)
         {
             _config = config;
         }
+        //OnAuthorizationAsync: được gọi trước khi hành động controller được thực hiện. 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
             if (!context.HttpContext.Request.Headers.ContainsKey("Authorization"))

@@ -79,6 +79,8 @@ builder.Services.AddScoped<AdminAuthorizationFilter>();
 builder.Services.AddScoped<StaffAuthorizerFilter>();
 builder.Services.AddScoped<ProductValidationFilter>();
 
+
+
 // Thêm cấu hình xác thực JWT vào services collection
 builder.Services.AddAuthentication(options =>
 {

@@ -2,9 +2,11 @@
 using System.Security.Claims;
 namespace BackEnd.Extensions
 {
-    public  static class HttpContextExtensions
-    {        
-            public static int? GetCustomerId(this HttpContext context)
+    //REFERENCE NGUYEN DUC HOANG BKHN https://www.facebook.com/nguyen.duc.hoang.bk
+    public static class HttpContextExtensions // phương thức mở rộng thêm chức năng mới vào các lớp hiện có mà không cần kế thừa 
+                                               // có thể sử dụng nó ở bất kỳ đâu có HttpContext
+    {
+        public static int? GetCustomerId(this HttpContext context)
             {
                 if (context == null)
                 {
