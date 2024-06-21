@@ -39,12 +39,21 @@ namespace BackEnd.Reporitories
 
         public async Task<bool> DeletePointAsync(int ID)
         {
-            var loyaltyPoint = await _context.LoyaltyPoints.FindAsync(ID);
+            // Tìm LoyaltyPoint theo ID
+
+            //FindAsync tìm một thực thể dựa trên khóa chính của nó // chỉ sử dụng khi muốn truy vấn khóa chính
+            //FirstOrDefaultAsync thỏa mãn điều kiện cụ thể
+            var loyaltyPoint = await _context.LoyaltyPoints.FirstOrDefaultAsync(od=>od.CustomerId==ID);
+
+            // Kiểm tra xem LoyaltyPoint có tồn tại không
             if (loyaltyPoint == null)
             {
+                // Có thể log lỗi hoặc thông báo về việc không tìm thấy LoyaltyPoint
+                Console.WriteLine($"LoyaltyPoint with ID {ID} not found.");
                 return false;
             }
 
+            // Xóa LoyaltyPoint
             _context.LoyaltyPoints.Remove(loyaltyPoint);
             await _context.SaveChangesAsync();
             return true;

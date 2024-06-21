@@ -115,7 +115,7 @@ namespace BackEnd.Services
                     await _repository.UpdateLoyalPointAsync(staffDeleteModel.customerId, point2);
                 }
                 var later = await _repository.GetPoints(staffDeleteModel.customerId);
-                if (later == 0 || later == null)
+                if (later <= 0 || later == null)
                 {
                     await _repository.DeletePointAsync(staffDeleteModel.customerId);
                 }
