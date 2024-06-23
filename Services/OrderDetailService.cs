@@ -371,7 +371,7 @@ namespace BackEnd.Services
                 int? quan = await _orderDetailRepository.FindQuan(deleteCartView.ProductID, orderId);
                 if (quan == null) { quan = 0; }
                 var dkm = await _orderRepository.GetOrderByIdAsync2(orderId);
-
+//
                 if (quan - (deleteCartView.Quantity) == 0)
                 {
                     // Xóa chi tiết đơn hàng
@@ -403,7 +403,7 @@ namespace BackEnd.Services
                     product.Quantity += deleteCartView.Quantity;
                     await _productRepository.UpdateProductAsync(product.ProductId, product);
                 }
-
+//
                 else if (quan - (deleteCartView.Quantity) < 0)
                 {
                     throw new Exception($"sản phẩm với mã {deleteCartView.ProductID} " +

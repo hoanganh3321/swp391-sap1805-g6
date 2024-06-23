@@ -33,23 +33,21 @@ namespace BackEnd.Services
         }
 
         public async Task<ProductReturnResult> CreateProductReturnAsync(ProductReturnViewModel productReturn)
-        {
+        {          
             var GoldPrice = await _goldPriceDisplayRepository.GetGoldPriceByLocation(productReturn.location);//require location
             var customer = await _orderRepository.SearchCustomer(productReturn.CustomerId);//require customerId
             var product = await _productRepository.GetProductByIdAsync(productReturn.ProductId);//require ProductId
-            //neu customer == null && product == null thi day la khach hang moi
+            //neu customer == null && product == null thi day la khach vang lai
             if (customer == null && product == null)
-            {//san pham mua lai tu khach hang moi
+            {//san pham mua lai tu khach vang lai
 
-                if (productReturn.CategoryId == 21)
+                if (productReturn.CategoryId == 21)//category require
                 {//neu la da quy thi chi mua lai da
                     Product newProduct = new()
                     {
                         ProductName = productReturn.ProductName,//require ProductName
-                        Barcode = productReturn.Barcode,
                         Weight = productReturn.Weight,//require Weight
                         Price = productReturn.StoneCost,//require StoneCost
-                        Warranty = productReturn.Warranty,
                         Quantity = productReturn.Quantity, //require Quantity
                         IsBuyback = true,
                         CategoryId = productReturn.CategoryId, //require CategoryId
@@ -65,16 +63,14 @@ namespace BackEnd.Services
                         Product = newProduct
                     };
                 }
-                else  //neu customer != null && product != null thi day la khach hang cu
+                else  
 
                 { //neu la vang chi mua lai voi gia vang hien tai duoc cap nhat hang ngay
                     Product newProduct = new()
                     {
                         ProductName = productReturn.ProductName,
-                        Barcode = productReturn.Barcode,
                         Weight = productReturn.Weight,
                         Price = GoldPrice,
-                        Warranty = productReturn.Warranty,
                         Quantity = productReturn.Quantity,
                         IsBuyback = true,
                         CategoryId = productReturn.CategoryId,
@@ -91,7 +87,7 @@ namespace BackEnd.Services
                     };
                 }         
             }
-            else
+            else //khach hang cu
             {//san pham mua lai tu san pham da ban cho khach
                 ProductReturn returnPro = new()
                 {
@@ -107,10 +103,8 @@ namespace BackEnd.Services
                     Product buyback = new()
                     {
                         ProductName = productReturn.ProductName,
-                        Barcode = productReturn.Barcode,
                         Weight = productReturn.Weight,
                         Price = (productReturn.Price * 7) / 10,
-                        Warranty = productReturn.Warranty,
                         Quantity = productReturn.Quantity,
                         IsBuyback = true,
                         CategoryId = productReturn.CategoryId,
@@ -123,10 +117,8 @@ namespace BackEnd.Services
                     Product buyback = new()
                     {
                         ProductName = productReturn.ProductName,
-                        Barcode = productReturn.Barcode,
                         Weight = productReturn.Weight,
                         Price = GoldPrice,
-                        Warranty = productReturn.Warranty,
                         Quantity = productReturn.Quantity,
                         IsBuyback = true,
                         CategoryId = productReturn.CategoryId,

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BackEnd.Controllers
 {
@@ -175,12 +176,20 @@ namespace BackEnd.Controllers
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)
-            {
-                // Log lỗi nếu cần thiết
-                return StatusCode(500, "An unexpected fault happened. Try again later.");
-            }
         }
+        //https://localhost:7002/api/StaffOrder/listallinvoice
+        [HttpGet("listallinvoice")]
+        [StaffAuthorize]
+        public async Task<IActionResult> ListAllInvoice()
+        {
+            int? staffId = _httpContextAccessor.HttpContext.GetStaffId();
+            if (staffId == null)
+            {
+                return BadRequest("Phiên đăng nhập hết hạn");
+            }
 
+          var invoice=  await _invoiceService.GetAllInvoicesAsync();
+            return Ok(invoice);
+        }
     }
 }

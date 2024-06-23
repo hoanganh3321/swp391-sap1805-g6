@@ -4,13 +4,10 @@ namespace BackEnd.ViewModels
 {
     public class ProductReturnViewModel
     {
-        [Required(ErrorMessage = "Product ID is required.")]
         public int ProductId { get; set; }
-        [Required(ErrorMessage = "Customer ID is required.")]
         public int CustomerId { get; set; }
         [Required(ErrorMessage = "ReturnDate is required.")]
         public DateTime ReturnDate { get; set; }
-        [Required(ErrorMessage = "ReturnReason is required.")]
         public string? ReturnReason { get; set; }
 
 
@@ -20,24 +17,26 @@ namespace BackEnd.ViewModels
 
         [StringLength(50, ErrorMessage = "Barcode cannot exceed 50 characters.")]
         public string? Barcode { get; set; }
-
+        [Required]
         public decimal? Weight { get; set; }
-
+        [Required]
         public decimal? Price { get; set; }
 
         public decimal? ManufacturingCost { get; set; }
+        [Required]
         public decimal? StoneCost { get; set; }
         [StringLength(255, ErrorMessage = "Warranty cannot exceed 255 characters.")]
         public string? Warranty { get; set; }
+        [Required]
         [Range(0, int.MaxValue, ErrorMessage = "Quantity must be a positive number.")]
         public int? Quantity { get; set; }
 
         public bool? IsBuyback { get; set; }
-
+        [Required(ErrorMessage = "CategoryId is required.")]
         public int? CategoryId { get; set; }
-
+        [Required]
         public int? StoreId { get; set; }
-
+        [Required]
         public string? Image { get; set; }
         [Required]
         public string? location {  get; set; }

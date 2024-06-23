@@ -9,9 +9,11 @@ public partial class Customer
     public int CustomerId { get; set; }
  
     [StringLength(50)]
+    [Required]
     public string FirstName { get; set; } = null!;
 
     [StringLength(50)]
+    [Required]
     public  required string LastName { get; set; } 
     [EmailAddress]
     [StringLength(100)]

@@ -97,7 +97,7 @@ namespace BackEnd.Services
             var existingLoyalty = await _repository.GetLoyalty(staffDeleteModel.customerId);
             if (existingLoyalty == null)
             {
-                throw new Exception("bạn chưa mua bất kỳ sản phẩm nào");
+                
             }
             else
             {

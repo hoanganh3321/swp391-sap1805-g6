@@ -220,8 +220,6 @@ CREATE TABLE Invoice (
     CONSTRAINT FK_Invoice_Promotion FOREIGN KEY (PromotionID) REFERENCES Promotion(PromotionID), -- Ràng buộc khóa ngoại đến bảng Promotion
 	CONSTRAINT FK_Invoice_Staff FOREIGN KEY (StaffID) REFERENCES Staff(StaffID)
 );
-ALTER TABLE Invoice
-ADD CONSTRAINT UQ_Invoice_OrderID UNIQUE (OrderID);
 drop table Invoice
 
 

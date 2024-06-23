@@ -17,7 +17,7 @@ namespace BackEnd.Controllers
         {
             _customerService = customerService;
         }
-        //https://localhost:7002/api/customer/register
+        //https://localhost:7002/api/customer/register        
         [HttpPost("register")]
         //ok
         public async Task<IActionResult> RegisterCustomer(Customer customer)

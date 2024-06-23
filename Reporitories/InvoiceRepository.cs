@@ -15,10 +15,28 @@ namespace BackEnd.Reporitories
 
         public async Task<Invoice?> GetInvoiceByIdAsync(int? orderId)
         {
-            return await _context.Invoices.FirstOrDefaultAsync(o=>o.OrderId==orderId);
+            if (orderId == null)
+            {
+                throw new ArgumentNullException(nameof(orderId));
+            }
+
+            return await _context.Invoices
+                                 .Include(i => i.Order) // Bao gồm bảng Order
+                                 .ThenInclude(o=>o.OrderDetails) // Bao gồm bảng OrderDetails
+                                 .FirstOrDefaultAsync(i => i.OrderId == orderId);
         }
 
-        public async Task<IEnumerable<Invoice>> GetAllInvoicesAsync()
+        public async Task<Invoice?> GetOldInvoiceByOrderAsync(int? orderId)
+        {
+            if (orderId == null)
+            {
+                throw new ArgumentNullException(nameof(orderId));
+            }
+
+            return await _context.Invoices                                
+                                 .FirstOrDefaultAsync(i => i.OrderId == orderId);
+        }
+        public async Task<List<Invoice>> GetAllInvoicesAsync()
         {
             return await _context.Invoices.ToListAsync();
         }
