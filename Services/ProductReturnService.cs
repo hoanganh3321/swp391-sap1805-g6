@@ -33,109 +33,77 @@ namespace BackEnd.Services
         }
 
         public async Task<ProductReturnResult> CreateProductReturnAsync(ProductReturnViewModel productReturn)
-        {          
-            var GoldPrice = await _goldPriceDisplayRepository.GetGoldPriceByLocation(productReturn.location);//require location
-            var customer = await _orderRepository.SearchCustomer(productReturn.CustomerId);//require customerId
-            var product = await _productRepository.GetProductByIdAsync(productReturn.ProductId);//require ProductId
-            //neu customer == null && product == null thi day la khach vang lai
+        {
+            var goldPrice = await _goldPriceDisplayRepository.GetGoldPriceByLocation(productReturn.location);
+            var customer = await _orderRepository.SearchCustomer(productReturn.CustomerId);
+            var product = await _productRepository.GetProductByIdAsync(productReturn.ProductId);
+
             if (customer == null && product == null)
-            {//san pham mua lai tu khach vang lai
-
-                if (productReturn.CategoryId == 21)//category require
-                {//neu la da quy thi chi mua lai da
-                    Product newProduct = new()
-                    {
-                        ProductName = productReturn.ProductName,//require ProductName
-                        Weight = productReturn.Weight,//require Weight
-                        Price = productReturn.StoneCost,//require StoneCost
-                        Quantity = productReturn.Quantity, //require Quantity
-                        IsBuyback = true,
-                        CategoryId = productReturn.CategoryId, //require CategoryId
-                        StoreId = productReturn.StoreId,
-                        Image = productReturn.Image, //require Image
-                    };
-
-                    await _productRepository.AddProductAsync(newProduct);
-                    //ket qua 1
-                    return new ProductReturnResult
-                    {
-                        IsNewProduct = true,
-                        Product = newProduct
-                    };
-                }
-                else  
-
-                { //neu la vang chi mua lai voi gia vang hien tai duoc cap nhat hang ngay
-                    Product newProduct = new()
-                    {
-                        ProductName = productReturn.ProductName,
-                        Weight = productReturn.Weight,
-                        Price = GoldPrice,
-                        Quantity = productReturn.Quantity,
-                        IsBuyback = true,
-                        CategoryId = productReturn.CategoryId,
-                        StoreId = productReturn.StoreId,
-                        Image = productReturn.Image,
-                    };
-
-                    await _productRepository.AddProductAsync(newProduct);
-                    //ket qua 1
-                    return new ProductReturnResult
-                    {
-                        IsNewProduct = true,
-                        Product = newProduct
-                    };
-                }         
+            {
+                return await HandleNewCustomerReturnAsync(productReturn, goldPrice);
             }
-            else //khach hang cu
-            {//san pham mua lai tu san pham da ban cho khach
-                ProductReturn returnPro = new()
-                {
-                    ProductId = productReturn.ProductId,
-                    CustomerId = productReturn.CustomerId,
-                    ReturnDate = productReturn.ReturnDate,
-                    ReturnReason = productReturn.ReturnReason,
-                };
-
-                await _productReturnRepository.AddAsync(returnPro);
-                if (productReturn.CategoryId == 21)
-                {//neu la da quy thi se mua lai =70% gia da ban
-                    Product buyback = new()
-                    {
-                        ProductName = productReturn.ProductName,
-                        Weight = productReturn.Weight,
-                        Price = (productReturn.Price * 7) / 10,
-                        Quantity = productReturn.Quantity,
-                        IsBuyback = true,
-                        CategoryId = productReturn.CategoryId,
-                        StoreId = productReturn.StoreId,
-                        Image = productReturn.Image,
-                    };
-                    await _productRepository.AddProductAsync(buyback);
-                }else 
-                {// chi mua lai phan vang thuc te theo gia vang dc cap nhat hang ngay
-                    Product buyback = new()
-                    {
-                        ProductName = productReturn.ProductName,
-                        Weight = productReturn.Weight,
-                        Price = GoldPrice,
-                        Quantity = productReturn.Quantity,
-                        IsBuyback = true,
-                        CategoryId = productReturn.CategoryId,
-                        StoreId = productReturn.StoreId,
-                        Image = productReturn.Image,
-                    };
-                    await _productRepository.AddProductAsync(buyback);
-                }
-              
-            //ket qua 2
-                return new ProductReturnResult
-                {
-                    IsNewProduct = false,
-                    ProductReturn = returnPro
-                };
+            else
+            {
+                return await HandleExistingCustomerReturnAsync(productReturn, goldPrice);
             }
         }
+
+        private async Task<ProductReturnResult> HandleNewCustomerReturnAsync(ProductReturnViewModel productReturn, decimal? goldPrice)
+        {
+            Product newProduct = new()
+            {
+                ProductName = productReturn.ProductName,
+                Weight = productReturn.Weight,
+                Price = productReturn.CategoryId == 21 ? productReturn.StoneCost : goldPrice,
+                Quantity = productReturn.Quantity,
+                IsBuyback = true,
+                CategoryId = productReturn.CategoryId,
+                StoreId = productReturn.StoreId,
+                Image = productReturn.Image,
+            };
+
+            await _productRepository.AddProductAsync(newProduct);
+
+            return new ProductReturnResult
+            {
+                IsNewProduct = true,
+                Product = newProduct
+            };
+        }
+
+        private async Task<ProductReturnResult> HandleExistingCustomerReturnAsync(ProductReturnViewModel productReturn, decimal? goldPrice)
+        {
+            ProductReturn returnPro = new()
+            {
+                ProductId = productReturn.ProductId,
+                CustomerId = productReturn.CustomerId,
+                ReturnDate = productReturn.ReturnDate,
+                ReturnReason = productReturn.ReturnReason,
+            };
+
+            await _productReturnRepository.AddAsync(returnPro);
+
+            Product buyback = new()
+            {
+                ProductName = productReturn.ProductName,
+                Weight = productReturn.Weight,
+                Price = productReturn.CategoryId == 21 ? (productReturn.Price * 0.7m) : goldPrice,
+                Quantity = productReturn.Quantity,
+                IsBuyback = true,
+                CategoryId = productReturn.CategoryId,
+                StoreId = productReturn.StoreId,
+                Image = productReturn.Image,
+            };
+
+            await _productRepository.AddProductAsync(buyback);
+
+            return new ProductReturnResult
+            {
+                IsNewProduct = false,
+                ProductReturn = returnPro
+            };
+        }
+
 
 
         public async Task UpdateProductReturnAsync(ProductReturn productReturn)

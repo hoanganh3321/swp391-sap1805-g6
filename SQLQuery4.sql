@@ -1,4 +1,4 @@
-﻿create database banhang_3
+﻿create database banhang_5
 
 CREATE TABLE Category (
     CategoryID INT PRIMARY KEY IDENTITY(1,1),
@@ -17,9 +17,6 @@ VALUES
     ('Brooches', 'Elegant and stylish brooches for all occasions.'),
     ('Cufflinks', 'Stylish cufflinks for formal wear.'),
     ('Hair Accessories', 'Beautiful hair accessories made with precious materials.');
-
-
-
 
 INSERT INTO Category (CategoryName, Description)
 VALUES 

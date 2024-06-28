@@ -49,167 +49,68 @@ namespace BackEnd.Services
             {
                 throw new ArgumentNullException(nameof(orderId));
             }
-            //
-            // Lấy giá trị không đồng bộ của PriceWithNoPromotion
+
             var priceWithNoPromotion = await _orderRepository.GetPriceWithNoPromotionAsync(orderId);
-            if (priceWithNoPromotion == null) { throw new BadRequestException("Khách hàng chưa đặt hàng, vui lòng đặt hàng trước khi giao dịch được thực hiện"); }
-            // Lấy giá trị không đồng bộ của customerId
+            if (priceWithNoPromotion == null)
+            {
+                throw new BadRequestException("Khách hàng chưa đặt hàng, vui lòng đặt hàng trước khi giao dịch được thực hiện");
+            }
+
             var customerId = await _orderRepository.SearchCustomerByOrderId(orderId);
-            if (customerId == null) { throw new BadRequestException("Khách hàng chưa đặt hàng, vui lòng đặt hàng trước khi giao dịch được thực hiện"); }
-            // Chờ để hoàn thành các nhiệm vụ không đồng bộ
             if (customerId == null)
             {
-                throw new InvalidOperationException("Customer not found for the given order.");
+                throw new BadRequestException("Khách hàng chưa đặt hàng, vui lòng đặt hàng trước khi giao dịch được thực hiện");
             }
-            ///
-            // Lấy giá trị không đồng bộ của loyalty points
-            var ContiOrder = await _invoiceRepository.GetOldInvoiceByOrderAsync(orderId);
+
             var loyalPointOfCustomer = await _customerRepository.GetCustomerLoyalPointByCustomerId1(customerId);
-            //
-            if (ContiOrder == null) 
+            int customerLoyaltyPoints = loyalPointOfCustomer?.Points ?? 0;
+
+            var applicablePromotion = await GetApplicablePromotionAsync(customerLoyaltyPoints);
+            if (applicablePromotion == null)
             {
-                //KHÁC HÀNG CHƯA CÓ HÓA ĐƠN TRƯỚC ĐÓ : KHÁCH HÀNG LẦN ĐẦU TỚI MUA HÀNG
-                if (loyalPointOfCustomer == null)
-                {
-                    int? customerLoyaltyPoints = 0;
-                    //liet ke tat ca chinh sach khuyến mại đã có trong database
-                    var pro1 = await _promotionService.GetAllPromotionsAsync();
-                    // Tìm khuyến mại phù hợp với điểm khách hàng
-                    var applicablePromotion1 = pro1
-                        .Where(p => customerLoyaltyPoints >= p.Points)
-                        .OrderByDescending(p => p.Points)
-                        .FirstOrDefault();
-                    //
-                    if (applicablePromotion1 == null)
-                    {
-                        throw new InvalidOperationException("Current promotions are currently unavailable for your situation");
-                    }
-                    //
-                    var invoicewithNoDiscount = new Invoice()
-                    {
-                        OrderId = orderId.Value,
-                        PromotionId = applicablePromotion1.PromotionId,
-                        PromotionName = applicablePromotion1.Name,
-                        TotalPrice = priceWithNoPromotion,
-                        StaffId = staffId
-                    };
-                    //
-                    await _invoiceRepository.AddInvoiceAsync(invoicewithNoDiscount);
-                }
-                else
-                {
-                    //liet ke tat ca chinh sach khuyến mại đã có trong database
-                    var pro = await _promotionService.GetAllPromotionsAsync();
-                    // Tìm khuyến mại phù hợp với điểm khách hàng
-                    var applicablePromotion = pro
-                        .Where(p => loyalPointOfCustomer.Points >= p.Points)
-                        .OrderByDescending(p => p.Points)
-                        .FirstOrDefault();
-                    //
-                    if (applicablePromotion == null)
-                    {
-                        throw new InvalidOperationException("Current promotions are currently unavailable for your situation");
-                    }
-                    //
-                    // Tính toán giá trị cuối cùng dựa trên khuyến mại
-                    var totalPrice = priceWithNoPromotion * applicablePromotion.Discount;
-                    //
-                    var invoice = new Invoice()
-                    {
-                        OrderId = orderId.Value,
-                        PromotionId = applicablePromotion.PromotionId,
-                        PromotionName = applicablePromotion.Name,
-                        TotalPrice = totalPrice,
-                        StaffId = staffId
-                    };
-                    //
-                    await _invoiceRepository.AddInvoiceAsync(invoice);
-                }
+                throw new InvalidOperationException("Current promotions are currently unavailable for your situation");
             }
-            else
+
+            var totalPrice = CalculateTotalPrice(priceWithNoPromotion, applicablePromotion.Discount);
+
+            var invoice = new Invoice()
             {
-              //KHÁC HÀNG ĐÃ CÓ HÓA ĐƠN TRƯỚC ĐÓ : KHÁCH HÀNG TỚI MUA LẦN 2
-                if (loyalPointOfCustomer == null)
-                {
-                    int? customerLoyaltyPoints = 0;
-                    // Liệt kê tất cả chính sách khuyến mại đã có trong database
-                    var pro1 = await _promotionService.GetAllPromotionsAsync();
-                    // Tìm khuyến mại phù hợp với điểm khách hàng
-                    var applicablePromotion1 = pro1
-                        .Where(p => customerLoyaltyPoints >= p.Points)
-                        .OrderByDescending(p => p.Points)
-                        .FirstOrDefault();
-                    //
-                    if (applicablePromotion1 == null)
-                    {
-                        throw new InvalidOperationException("Current promotions are currently unavailable for your situation");
-                    }
-                    //
-                    // Tính toán giá trị mới cho TotalPrice dựa trên khuyến mại
-                    var totalPrice = priceWithNoPromotion * applicablePromotion1.Discount;
+                OrderId = orderId.Value,
+                PromotionId = applicablePromotion.PromotionId,
+                PromotionName = applicablePromotion.Name,
+                TotalPrice = totalPrice,
+                StaffId = staffId
+            };
 
-                    // Tạo hóa đơn mới
-                    var newInvoice = new Invoice()
-                    {
-                        OrderId = orderId.Value,
-                        PromotionId = applicablePromotion1.PromotionId,
-                        PromotionName = applicablePromotion1.Name,
-                        TotalPrice = totalPrice,
-                        StaffId = staffId
-                    };
+            await _invoiceRepository.AddInvoiceAsync(invoice);
 
-                    // Lưu hóa đơn mới vào cơ sở dữ liệu
-                    await _invoiceRepository.AddInvoiceAsync(newInvoice);
-                }
-                else
-                {
-                    // Liệt kê tất cả chính sách khuyến mại đã có trong database
-                    var pro = await _promotionService.GetAllPromotionsAsync();
-                    // Tìm khuyến mại phù hợp với điểm khách hàng
-                    var applicablePromotion = pro
-                        .Where(p => loyalPointOfCustomer.Points >= p.Points)
-                        .OrderByDescending(p => p.Points)
-                        .FirstOrDefault();
-                    //
-                    if (applicablePromotion == null)
-                    {
-                        throw new InvalidOperationException("Current promotions are currently unavailable for your situation");
-                    }
-                    //
-                    // Tính toán giá trị mới cho TotalPrice dựa trên khuyến mại
-                    var totalPrice = priceWithNoPromotion * applicablePromotion.Discount;
-
-                    // Tạo hóa đơn mới
-                    var newInvoice = new Invoice()
-                    {
-                        OrderId = orderId.Value,
-                        PromotionId = applicablePromotion.PromotionId,
-                        PromotionName = applicablePromotion.Name,
-                        TotalPrice = totalPrice,
-                        StaffId = staffId
-                    };
-
-                    // Lưu hóa đơn mới vào cơ sở dữ liệu
-                    await _invoiceRepository.AddInvoiceAsync(newInvoice);
-                }
-            }
-
-
-            // cập nhật lại doanh thu của cửa hàng nơi mà staff làm việc đặt hàng
-            //
-            // Lấy giá trị không đồng bộ của iv
-            var iv = await _invoiceRepository.GetInVoiceAsync(staffId);
-            // Lấy giá trị không đồng bộ của st
-            var st = await _staffRepository.GetStoreByStaffIdAsync(staffId);
-            //
-            //update revenue store
-            st.Revenue = 0;
-            foreach (var item in iv) 
-            {         
-                st.Revenue += item.TotalPrice;   
-            }
-            await _storeRepository.UpdateRevenStoreAsync(st);         
+            // Cập nhật doanh thu của cửa hàng nơi nhân viên làm việc
+            await UpdateStoreRevenueAsync(staffId);
         }
+
+        private async Task<Promotion?> GetApplicablePromotionAsync(int customerLoyaltyPoints)
+        {
+            var promotions = await _promotionService.GetAllPromotionsAsync();
+            return promotions
+                .Where(p => customerLoyaltyPoints >= p.Points)
+                .OrderByDescending(p => p.Points)
+                .FirstOrDefault();
+        }
+
+        private decimal? CalculateTotalPrice(decimal? priceWithNoPromotion, decimal? discount)
+        {
+            return (priceWithNoPromotion * discount);
+        }
+
+        private async Task UpdateStoreRevenueAsync(int? staffId)
+        {
+            var invoices = await _invoiceRepository.GetInVoiceAsync(staffId);
+            var store = await _staffRepository.GetStoreByStaffIdAsync(staffId);
+
+            store.Revenue = invoices.Sum(invoice => invoice.TotalPrice);
+            await _storeRepository.UpdateRevenStoreAsync(store);
+        }
+
 
 
         public async Task<Invoice> UpdateInvoiceAsync(Invoice invoice)
