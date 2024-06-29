@@ -49,10 +49,11 @@ namespace BackEnd.Reporitories
             }
             existingPromo.Name = promotion.Name;
             existingPromo.StartDate = promotion.StartDate;
-            existingPromo.StartDate = promotion.StartDate;
+            existingPromo.EndDate = promotion.EndDate;
             existingPromo.Discount = promotion.Discount;
             existingPromo.Approved = promotion.Approved;
             existingPromo.ApprovedBy= adminId;
+            existingPromo.Points= promotion.Points;
             await _context.SaveChangesAsync();
             return true;
         }
