@@ -7,5 +7,7 @@ namespace BackEnd.Reporitories
     {
         Task<Staff?> GetAdminByEmailAsync(string email);
         Task<Store> GetStoreByStaffIdAsync(int? staffId);
+        Task<Staff?> GetStaffByEmailAsync(string email);
+        Task<IEnumerable<Staff>> GetAllStaff();
     }
 }

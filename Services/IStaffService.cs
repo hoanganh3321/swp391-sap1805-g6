@@ -1,4 +1,5 @@
-﻿using BackEnd.ViewModels;
+﻿using BackEnd.Models;
+using BackEnd.ViewModels;
 
 namespace BackEnd.Services
 {
@@ -6,5 +7,7 @@ namespace BackEnd.Services
     {
         Task<string> LoginAsync(LoginRequest loginRequest);
         Task LogoutAsync();
+        Task<Staff?> GetStaffByEmailAsync(string email);
+        Task<IEnumerable<Staff>> GetAllStaff();
     }
 }

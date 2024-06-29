@@ -1,4 +1,5 @@
-﻿using BackEnd.Services;
+﻿using BackEnd.Attributes;
+using BackEnd.Services;
 using BackEnd.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +39,30 @@ namespace BackEnd.Controllers
             return Ok("Logged out successfully");
         }
 
+        //https://localhost:7002/api/staff/search/?email={}
+        [HttpGet("search")]
+        [AdminAuthorize]
+        public async Task<IActionResult> GetStaff( [FromQuery] string email)
+        {
+            var staff = await _staffService.GetStaffByEmailAsync(email);
+            if (staff == null)
+            {
+                return NotFound();
+            }
+            return Ok(staff);
+        }
 
-
+        //https://localhost:7002/api/staff/list
+        [HttpGet("list")]
+        [AdminAuthorize]
+        public async Task<IActionResult> GetAllStaff()
+        {
+            var staff = await _staffService.GetAllStaff();
+            if (staff == null)
+            {
+                return NotFound();
+            }
+            return Ok(staff);
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using BackEnd.ViewModels;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackEnd.Services
 {
@@ -37,6 +38,16 @@ namespace BackEnd.Services
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<IEnumerable<Staff>> GetAllStaff()
+        {
+            return await _staffRepository.GetAllStaff();
+        }
+
+        public async Task<Staff?> GetStaffByEmailAsync(string email)
+        {
+            return await _staffRepository.GetStaffByEmailAsync(email);
         }
 
         public async Task<string> LoginAsync(LoginRequest loginRequest)

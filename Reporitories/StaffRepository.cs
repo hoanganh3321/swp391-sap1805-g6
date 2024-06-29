@@ -17,6 +17,16 @@ namespace BackEnd.Reporitories
             return await _context.Staff.FirstOrDefaultAsync(c => c.Email == email);
         }
 
+        public async Task<IEnumerable<Staff>> GetAllStaff()
+        {
+            return await _context.Staff.ToListAsync();
+        }
+
+        public async Task<Staff?> GetStaffByEmailAsync(string email)
+        {
+            return await _context.Staff.FirstOrDefaultAsync(c => c.Email == email);
+        }
+
         public async Task<Store> GetStoreByStaffIdAsync(int? staffId)
         {
             var staff = await _context.Staff
