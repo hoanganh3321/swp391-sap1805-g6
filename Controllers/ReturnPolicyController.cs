@@ -65,7 +65,7 @@ namespace BackEnd.Controllers
             {
                 return NotFound();
             }
-            return Ok();
+            return Ok(updated);
         }
 
         //https://localhost:7002/api/product/delete/{id}
