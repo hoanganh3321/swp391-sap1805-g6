@@ -10,10 +10,11 @@ namespace BackEnd.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminService _adminService;
-
+        
         public AdminController(IAdminService adminService)
         {
             _adminService = adminService;
+
         }
         //https://localhost:7002/api/admin/login
         //ok

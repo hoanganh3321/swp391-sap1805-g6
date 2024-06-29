@@ -12,6 +12,14 @@ namespace BackEnd.Reporitories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+
+        public async Task<Staff?> AddStaffAsync(Staff staff)
+        {
+            _context.Staff.Add(staff);
+            await _context.SaveChangesAsync();
+            return staff;
+        }
+
         public async Task<Staff?> GetAdminByEmailAsync(string email)
         {
             return await _context.Staff.FirstOrDefaultAsync(c => c.Email == email);

@@ -9,5 +9,7 @@ namespace BackEnd.Services
         Task LogoutAsync();
         Task<Staff?> GetStaffByEmailAsync(string email);
         Task<IEnumerable<Staff>> GetAllStaff();
+        Task<Staff?> AddStaffAsync(Staff staff);
+
     }
 }

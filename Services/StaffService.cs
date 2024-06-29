@@ -20,6 +20,11 @@ namespace BackEnd.Services
             _configuration = configuration;
         }
 
+        public async Task<Staff?> AddStaffAsync(Staff staff)
+        {
+            return await _staffRepository.AddStaffAsync(staff);
+        }
+
         public string GenerateJwtToken(Staff staff)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
