@@ -89,5 +89,10 @@ public class CustomerRepository : ICustomerRepository
         }
         return customer.LoyaltyPoints.FirstOrDefault();
     }
+
+    public async Task<IEnumerable<Customer>> GetAllAsync()
+    {
+        return await _context.Customers.ToListAsync();
+    }
 }
 

@@ -14,9 +14,10 @@ namespace BackEnd.Reporitories
 
         Task<Customer?> GetCustomerByAddressAsync(string Address);
         Task<Customer?> GetCustomerByPhoneNumberAsync(string PhoneNumber);
-        Task<Customer> UpdateCustomerAsync(Customer customer);
-        
-        Task DeleteCustomerAsync(int customerId);
+        Task<Customer> UpdateCustomerAsync(Customer customer);//
+        Task<IEnumerable<Customer>> GetAllAsync();
+
+        Task DeleteCustomerAsync(int customerId);//
         Task<Customer?> GetCustomerByIdAsync(int customerId);
         Task<LoyaltyPoint?> GetCustomerLoyalPointByCustomerId1(int? customerId);
     }

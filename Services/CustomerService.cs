@@ -111,6 +111,19 @@ namespace BackEnd.Services
             if (existingCustomerByLastName == null) { throw new Exception("customer not found"); }
             return existingCustomerByLastName.FirstOrDefault();
         }
+        public async Task<IEnumerable<Customer>> GetAllCustomersAsync()
+        {
+            return await _customerRepository.GetAllAsync();
+        }
+        public async Task UpdateCustomerAsync(Customer customer)
+        {
+            await _customerRepository.UpdateCustomerAsync(customer);
+        }
+
+        public async Task DeleteCustomerAsync(int id)
+        {
+            await _customerRepository.DeleteCustomerAsync(id);
+        }
 
     }
 }
