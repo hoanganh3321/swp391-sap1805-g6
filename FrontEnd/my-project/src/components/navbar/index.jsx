@@ -2,40 +2,41 @@ import React from "react";
 import Dropdown from "../../components/dropdown";
 import { FiAlignJustify } from "react-icons/fi";
 import { Link } from "react-router-dom";
+// import navbarimage from "assets/img/layout/Navbar.png";
+// import { BsArrowBarUp } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
 import { RiMoonFill, RiSunFill } from "react-icons/ri";
 import {
   IoMdNotificationsOutline,
   IoMdInformationCircleOutline,
 } from "react-icons/io";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/img/avatars/avatar4.png";
+import {logout } from "../../ultils/helper";
 
 const Navbar = (props) => {
   const { onOpenSidenav, brandText } = props;
   const [darkmode, setDarkmode] = React.useState(false);
-  const navigate = useNavigate(); // Hook to navigate programmatically
 
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No token found. Already logged out.");
-      }
+      await logout();
+      // const token = localStorage.getItem("token");
+      // if (!token) {
+      //   throw new Error("No token found. Already logged out.");
+      // }
 
-      await axios.post(
-        "https://localhost:7002/api/admin/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // await axios.post(
+      //   "https://localhost:7002/api/admin/logout",
+      //   {},
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
 
-      localStorage.removeItem("token");
-      navigate("/login");
+      // localStorage.removeItem("token");
+      // navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -88,6 +89,7 @@ const Navbar = (props) => {
         >
           <FiAlignJustify className="w-5 h-5" />
         </span>
+        {/* start Notification */}
         <Dropdown
           button={
             <p className="cursor-pointer">
@@ -95,9 +97,88 @@ const Navbar = (props) => {
             </p>
           }
           animation="origin-[65%_0%] md:origin-top-right transition-all duration-300 ease-in-out"
+          // children={
+          //   <div className="flex w-[360px] flex-col gap-3 rounded-[20px] bg-white p-4 shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none sm:w-[460px]">
+          //     <div className="flex items-center justify-between">
+          //       <p className="text-base font-bold text-navy-700 dark:text-white">
+          //         Notification
+          //       </p>
+          //       <p className="text-sm font-bold text-navy-700 dark:text-white">
+          //         Mark all read
+          //       </p>
+          //     </div>
+
+          //     <button className="flex items-center w-full">
+          //       <div className="flex h-full w-[85px] items-center justify-center rounded-xl bg-gradient-to-b from-brandLinear to-brand-500 py-4 text-2xl text-white">
+          //         <BsArrowBarUp />
+          //       </div>
+          //       <div className="flex flex-col justify-center w-full h-full px-1 ml-2 text-sm rounded-lg">
+          //         <p className="mb-1 text-base font-bold text-left text-gray-900 dark:text-white">
+          //           New Update: Horizon UI Dashboard PRO
+          //         </p>
+          //         <p className="text-xs text-left text-gray-900 font-base dark:text-white">
+          //           A new update for your downloaded item is available!
+          //         </p>
+          //       </div>
+          //     </button>
+
+          //     <button className="flex items-center w-full">
+          //       <div className="flex h-full w-[85px] items-center justify-center rounded-xl bg-gradient-to-b from-brandLinear to-brand-500 py-4 text-2xl text-white">
+          //         <BsArrowBarUp />
+          //       </div>
+          //       <div className="flex flex-col justify-center w-full h-full px-1 ml-2 text-sm rounded-lg">
+          //         <p className="mb-1 text-base font-bold text-left text-gray-900 dark:text-white">
+          //           New Update: Horizon UI Dashboard PRO
+          //         </p>
+          //         <p className="text-xs text-left text-gray-900 font-base dark:text-white">
+          //           A new update for your downloaded item is available!
+          //         </p>
+          //       </div>
+          //     </button>
+          //   </div>
+          // }
           classNames={"py-2 top-4 -left-[230px] md:-left-[440px] w-max"}
         />
+        {/* start Horizon PRO */}
         <Dropdown
+          button={
+            <p className="cursor-pointer">
+              {/* <IoMdInformationCircleOutline className="w-4 h-4 text-gray-600 dark:text-white" /> */}
+            </p>
+          }
+          // children={
+          //   <div className="flex w-[350px] flex-col gap-2 rounded-[20px] bg-white p-4 shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
+          //     <div
+          //       style={{
+          //         backgroundImage: `url(${navbarimage})`,
+          //         backgroundRepeat: "no-repeat",
+          //         backgroundSize: "cover",
+          //       }}
+          //       className="w-full mb-2 rounded-lg aspect-video"
+          //     />
+          //     <a
+          //       target="blank"
+          //       href="https://horizon-ui.com/pro?ref=live-free-tailwind-react"
+          //       className="px-full linear flex cursor-pointer items-center justify-center rounded-xl bg-brand-500 py-[11px] font-bold text-white transition duration-200 hover:bg-brand-600 hover:text-white active:bg-brand-700 dark:bg-brand-400 dark:hover:bg-brand-300 dark:active:bg-brand-200"
+          //     >
+          //       Buy Horizon UI PRO
+          //     </a>
+          //     <a
+          //       target="blank"
+          //       href="https://horizon-ui.com/docs-tailwind/docs/react/installation?ref=live-free-tailwind-react"
+          //       className="px-full linear flex cursor-pointer items-center justify-center rounded-xl border py-[11px] font-bold text-navy-700 transition duration-200 hover:bg-gray-200 hover:text-navy-700 dark:!border-white/10 dark:text-white dark:hover:bg-white/20 dark:hover:text-white dark:active:bg-white/10"
+          //     >
+          //       See Documentation
+          //     </a>
+          //     <a
+          //       target="blank"
+          //       href="https://horizon-ui.com/?ref=live-free-tailwind-react"
+          //       className="hover:bg-black px-full linear flex cursor-pointer items-center justify-center rounded-xl py-[11px] font-bold text-navy-700 transition duration-200 hover:text-navy-700 dark:text-white dark:hover:text-white"
+          //     >
+          //       Try Horizon Free
+          //     </a>
+          //   </div>
+          // }
           classNames={"py-2 top-6 -left-[250px] md:-left-[330px] w-max"}
           animation="origin-[75%_0%] md:origin-top-right transition-all duration-300 ease-in-out"
         />
@@ -146,12 +227,18 @@ const Navbar = (props) => {
                 >
                   Profile Settings
                 </a>
-                <button
-                  className="mt-3 text-sm font-medium text-red-500 transition duration-150 ease-out hover:text-red-500 hover:ease-in"
-                  onClick={handleLogout}
+                <a
+                  href=" "
+                  className="mt-3 text-sm text-gray-800 dark:text-white hover:dark:text-white"
                 >
-                  Log out
-                </button>
+                  Newsletter Settings
+                </a>
+                <a
+                  href=" "
+                  className="mt-3 text-sm font-medium text-red-500 transition duration-150 ease-out hover:text-red-500 hover:ease-in"
+                >
+                  Log Out
+                </a>
               </div>
             </div>
           }

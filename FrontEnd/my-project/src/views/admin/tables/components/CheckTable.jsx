@@ -44,9 +44,9 @@ const CheckTable = (props) => {
 
   const handleSearch = async () => {
     if (searchId.trim() === "") {
-      setData(tableData);
-      setErrorMessage(""); 
-      return; 
+      setData(tableData); // Reset to original table data if search input is cleared
+      setErrorMessage(""); // Clear any previous error messages
+      return; // Exit the function if search ID is empty
     }
 
     try {
@@ -63,6 +63,38 @@ const CheckTable = (props) => {
       setErrorMessage(error.message);
     }
   };
+
+  //   const handleDelete = async (id) => {
+  //     console.log("Attempting to delete product with ProductId:", id);
+
+  //     if (!window.confirm("Are you sure you want to delete this product?")) {
+  //         return;
+  //     }
+  //     const token = localStorage.getItem('jwttoken');
+  //     try {
+  //         const response = await axios.delete(`https://localhost:7002/api/product/delete/${id}`, {
+  //             headers: {
+  //                 'Content-Type': 'application/json',
+  //                 'Authorization': `Bearer ${token}`
+  //             }
+  //         });
+
+  //         console.log("Fetch request completed with status:", response.status);
+
+  //         if (response.status !== 200) {
+  //             const errorData = response.data;
+  //             console.error('Error response:', errorData);
+  //             throw new Error(errorData.title || 'Failed to delete product');
+  //         }
+
+  //         console.log("Product deleted successfully, updating state.");
+  //         fetchData();
+  //         setErrorMessage('');
+  //     } catch (error) {
+  //         console.error('Delete error:', error);
+  //         setErrorMessage(error.response?.data?.title || error.message);
+  //     }
+  // };
   const handleDelete = async (productId) => {
     console.log("Attempting to delete product with ProductId:", productId);
 
@@ -71,18 +103,12 @@ const CheckTable = (props) => {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No token found. Please log in.");
-      }
-
       const response = await fetch(
         `https://localhost:7002/api/product/delete/${productId}`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
           },
         }
       );
@@ -104,30 +130,23 @@ const CheckTable = (props) => {
     }
   };
 
-
   const handleEdit = (record) => {
     setEditingProduct(record);
     form.setFieldsValue({
       ...record,
-      isBuyback: !!record.isBuyback,
+      isBuyback: !!record.isBuyback, // Ensure isBuyback is boolean for Checkbox
     });
     setIsEditModalOpen(true);
   };
 
-const handleUpdate = async (values) => {
+  const handleUpdate = async (values) => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No token found. Please log in.");
-      }
-
       const response = await fetch(
-        `https://localhost:7002/api/product/update/${editingProduct.productId}`,
+        `https://localhost:7002/api/product/update/${editingProduct.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
           },
           body: JSON.stringify(values),
         }
@@ -145,7 +164,6 @@ const handleUpdate = async (values) => {
     }
   };
 
-
   const columns = [
     {
       title: "Product Name",
@@ -153,9 +171,9 @@ const handleUpdate = async (values) => {
       key: "productName",
     },
     {
-      title: "Barcode",
-      dataIndex: "barcode",
-      key: "barcode",
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
     },
     {
       title: "Weight",
@@ -163,50 +181,13 @@ const handleUpdate = async (values) => {
       key: "weight",
     },
     {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-    },
-    {
-      title: "Manufacturing Cost",
-      dataIndex: "manufacturingCost",
-      key: "manufacturingCost",
-    },
-    {
-      title: "Stone Cost",
-      dataIndex: "stoneCost",
-      key: "stoneCost",
-    },
-    {
-      title: "Warranty",
-      dataIndex: "warranty",
-      key: "warranty",
-    },
-    {
       title: "Quantity",
       dataIndex: "quantity",
       key: "quantity",
     },
     {
-      title: "Is Buyback",
-      dataIndex: "isBuyback",
-      key: "isBuyback",
-      render: (isBuyback) => (isBuyback ? "Yes" : "No"),
-    },
-    {
-      title: "Category ID",
-      dataIndex: "categoryId",
-      key: "categoryId",
-    },
-    {
-      title: "Store ID",
-      dataIndex: "storeId",
-      key: "storeId",
-    },
-    {
       title: "Action",
       key: "action",
-      align: "center",
       render: (_, record) => (
         <div style={{ display: "flex" }}>
           <Button
@@ -228,7 +209,6 @@ const handleUpdate = async (values) => {
       ),
     },
   ];
-  
 
   return (
     <Card extra={"w-full sm:overflow-auto p-4"}>
@@ -282,12 +262,12 @@ const handleUpdate = async (values) => {
             Save
           </Button>,
         ]}
-        width={800}
+        width={800} // Set width of the modal
       >
         <Form
           form={form}
           onFinish={handleUpdate}
-          initialValues={editingProduct}
+          initialValues={editingProduct} // Set initial values for all fields
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
         >
