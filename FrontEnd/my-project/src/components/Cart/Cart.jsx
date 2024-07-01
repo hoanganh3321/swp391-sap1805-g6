@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-
+import { Link, json, useNavigate } from 'react-router-dom';
+import { commonAPI } from "../../api/common.api";
+import { useParams } from "react-router-dom";
 function Cart() {
   const navigate = useNavigate();
   const [total, setTotal] = useState(0);
   const [carts, setCarts] = useState([]);
-  const customerId = localStorage.getItem('customerId');
-
+  const [orderDetails, setOrderDetails] = useState([]);
+  const { customerId } = useParams();
   useEffect(() => {
-    console.log(customerId);
     const fetchCart = async () => {
       try {
-        const response = await fetch(`https://localhost:7002/api/StaffOrder/viewCart/${customerId}`);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+        const response = await commonAPI.getAPI(`StaffOrder/viewCart/${customerId}`);
+        if (response.status == 200) {
+          setCarts(response.data); 
+          if (response.data?.length > 0){
+            setOrderDetails(response.data[0].orderDetails);  
+          }
+          
         }
-        const data = await response.json();
-        console.log('dataa', data);
-        setCarts(data);
+        throw new Error('Network response was not ok');
       } catch (error) {
         console.error('Failed to fetch cart:', error);
       }
@@ -34,22 +36,26 @@ function Cart() {
 
   const removeProduct = async (productId, quantity) => {
     try {
-      const response = await fetch(`https://localhost:7002/api/cart/DeleteFromCart`, {
-        method: 'DELETE',
-        headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            customerId: 1, 
-            ProductID: productId,
-            Quantity: quantity, 
-          }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to remove product from cart');
+      const response = await  commonAPI.putAPI(`StaffOrder/DeleteFromCart`, 
+      {  customerId: customerId, 
+        productID: productId,
+        quantity: quantity}
+      );
+      if (response.status == 200) {
+        carts.forEach(x => {
+          x.orderDetails = x.orderDetails.filter(item => item.productId !== productId);
+        });
+        // carts = JSON.parse(JSON.stringify(carts));
+        //const updatedCart = carts.filter((item) => item.orderDetails[0].productId !== productId);
+        setCarts(carts);
+        if (carts?.length == 1 &&  carts[0]?.orderDetails?.length == 0){
+          setCarts([]);
+        }
+        setOrderDetails(carts[0].orderDetails);
+
+        return;
       }
-      const updatedCart = carts.filter((item) => item.id !== productId);
-      setCarts(updatedCart);
+      throw new Error('Failed to remove product from cart');
     } catch (error) {
       console.error('Failed to remove product from cart:', error);
     }
@@ -69,19 +75,16 @@ function Cart() {
           </div>
           <div className="flex flex-wrap mt-10 mb-5">
             <h3 className="w-2/5 text-xs font-semibold text-gray-600 uppercase">Product Details</h3>
-            <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Quantity</h3>
+            {/* <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Quantity</h3> */}
             <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Price</h3>
             <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Total</h3>
           </div>
-          {carts[0]?.orderDetails?.map((cart) => (
+          {orderDetails.map((cart) => (
             
               <div key={cart?.orderDetailId} className="flex items-center px-6 py-5 -mx-8 hover:bg-gray-100">
                 <div className="flex w-2/5">
                   <div className="w-20">
-                    <img className="h-24" src={cart?.product?.image} alt=''/>
-                  </div>
-                  <div className="w-20">
-                    <span className="flex flex-col justify-between flex-grow ml-4"/>{cart?.product?.productName}
+                    <img className="h-24" alt={cart?.productName} />
                   </div>
                   <div className="flex flex-col justify-between flex-grow ml-4">
                     <span className="text-sm font-bold">{cart?.productId}</span>
@@ -93,7 +96,6 @@ function Cart() {
                     </div>
                   </div>
                 </div>
-                <span className="w-1/5 text-sm font-semibold text-center">{cart?.quantity}</span>
                 <span className="w-1/5 text-sm font-semibold text-center">{cart?.unitPrice}</span>
                 <span className="w-1/5 text-sm font-semibold text-center">{(cart?.unitPrice * cart?.quantity).toFixed(2)}</span>
               </div>        

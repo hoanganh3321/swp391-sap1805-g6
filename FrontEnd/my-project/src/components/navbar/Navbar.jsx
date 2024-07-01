@@ -6,35 +6,42 @@ import { IoCloseOutline } from "react-icons/io5";
 import { MdOutlineNotificationsActive } from "react-icons/md";
 import clsx from "clsx";
 import axios from "axios";
+import {logout} from "../../ultils/helper";
 
 export default function Navbar() {
   const [isSideMenuOpen, setMenu] = useState(false);
   const navigate = useNavigate();
 
   const navlinks = [
+    // {
+    //   label: "Sales",
+    //   link: "#",
+    // },
+    // {
+    //   label: "Products",
+    //   link: "products",
+    // },
+    // {
+    //   label: "About",
+    //   link: "#",
+    // },
+    // {
+    //   label: "Contact",
+    //   link: "#",
+    // },
     {
-      label: "Sales",
-      link: "#",
+      label: "Invoice",
+      link: "invoice"
     },
     {
-      label: "Products",
-      link: "#",
-    },
-    {
-      label: "About",
-      link: "#",
-    },
-    {
-      label: "Contact",
-      link: "#",
-    },
+      label: "Customer",
+      link: "customer"
+    }
   ];
 
   const handleLogout = async () => {
     try {
-      await axios.post("https://localhost:7002/api/admin/logout");
-      localStorage.removeItem('jwtToken');
-      navigate('/login');
+      await logout();
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -59,7 +66,7 @@ export default function Navbar() {
             <Link
               key={i}
               className="hidden lg:block hover:text-black text-hemp"
-              to={d.link}
+              to={`/${d.link}`}
             >
               {d.label}
             </Link>
@@ -80,7 +87,7 @@ export default function Navbar() {
             />
 
             {navlinks.map((d, i) => (
-              <Link key={i} className="font-bold" to={d.link}>
+              <Link key={i} className="font-bold" to={`/${d.link}`}>
                 {d.label}
               </Link>
             ))}
@@ -88,9 +95,9 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center">
-          <Link to="/cart" className="mr-8 text-2xl cursor-pointer">
+          {/* <Link to="/cart" className="mr-8 text-2xl cursor-pointer">
             <AiOutlineShoppingCart />
-          </Link>
+          </Link> */}
           <MdOutlineNotificationsActive className="mr-8 text-2xl cursor-pointer" />
           {/* Nút Logout */}
           <button 
