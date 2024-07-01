@@ -3,6 +3,7 @@ import axios from "axios";
 import { Table, Modal, Form, Input, Button, Popconfirm, message } from "antd";
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import Card from "../../../components/card";
+import { commonAPI } from "../../../api/common.api";
 
 const GoldPriceTable = () => {
   const [goldPrices, setGoldPrices] = useState([]);
@@ -83,28 +84,21 @@ const handleAddGoldPrice = async (values) => {
 };
 
 
-const handleEditGoldPrice = async () => {
+const handleEditGoldPrice = async (values) => {
   try {
+
     const token = localStorage.getItem("token");
     if (!token) {
       throw new Error("No token found. Please log in.");
     }
-    const response = await axios.put(
-      `https://localhost:7002/api/GoldPriceDisplay/UpdateGoldPrice/${editData.displayId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    editData.deviceId = values.deviceId;
+    editData.location = values.location;
+    editData.goldPrice = values.goldPrice;
+    const response = await commonAPI.putAPI(`GoldPriceDisplay/UpdateGoldPrice/${editData.displayId}`, editData);
+    setIsModalOpen(false);
+    fetchGoldPrices();
+    message.success("Gold price updated successfully");
 
-    if (response.status === 200) {
-      setIsModalOpen(false);
-      fetchGoldPrices();
-      message.success("Gold price updated successfully");
-    } else {
-      throw new Error("Failed to update gold price");
-    }
   } catch (error) {
     console.error("Error updating gold price:", error);
     message.error("Failed to update gold price");
@@ -135,9 +129,16 @@ const handleDeleteGoldPrice = async (displayId) => {
 };
 
   const handleEditModalOpen = (record) => {
-    setEditData(record);
+    if (!record) return;
+    var cloneRecord = JSON.parse(JSON.stringify(record));
+    setEditData(cloneRecord);
     setIsModalOpen(true);
   };
+
+  const handleClickBtnAdd = () => {
+    setEditData(null);
+    setIsModalOpen(true);
+  }
 
   const columns = [
     {
@@ -214,9 +215,9 @@ const handleDeleteGoldPrice = async (displayId) => {
           <button
             type="button"
             className="rounded-lg bg-gradient-to-br from-purple-600 to-blue-500 px-3 py-2.5 text-center text-sm font-medium text-white me-2 hover:bg-gradient-to-bl focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
-            onClick={() => setIsModalOpen(true)}
+            onClick={handleClickBtnAdd}
           >
-            Add Product
+            Add GoldPrice
           </button>
         </div>
       </header>

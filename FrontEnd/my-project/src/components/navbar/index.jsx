@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import avatar from "../../assets/img/avatars/avatar4.png";
+import {logout } from "../../ultils/helper";
 
 const Navbar = (props) => {
   const { onOpenSidenav, brandText } = props;
@@ -19,23 +20,24 @@ const Navbar = (props) => {
 
   const handleLogout = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        throw new Error("No token found. Already logged out.");
-      }
+      await logout();
+      // const token = localStorage.getItem("token");
+      // if (!token) {
+      //   throw new Error("No token found. Already logged out.");
+      // }
 
-      await axios.post(
-        "https://localhost:7002/api/admin/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // await axios.post(
+      //   "https://localhost:7002/api/admin/logout",
+      //   {},
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
 
-      localStorage.removeItem("token");
-      navigate("/login");
+      // localStorage.removeItem("token");
+      // navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
     }

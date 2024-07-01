@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-
+import { removeToken } from "../hook/useAth";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const authSlice = createSlice({
     name: "auth",
     initialState: {
@@ -11,6 +13,7 @@ const authSlice = createSlice({
     },
     reducers: {
         loginStart: (state) => {
+            removeToken();
             state.login.isFetching = true;
         },
         loginSuccess: (state, action) => {
@@ -19,8 +22,10 @@ const authSlice = createSlice({
             state.login.error = false;
         },
         loginFailed: (state) => {
+            
             state.login.isFetching = false;
             state.login.error = true;
+            toast.error("Failed to login",{});
         }
     }
 

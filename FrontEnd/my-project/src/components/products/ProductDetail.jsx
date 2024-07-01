@@ -3,7 +3,10 @@ import { useParams } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/FooterHomePage";
 import { useNavigate } from "react-router-dom";
-
+import { Select, Button } from 'antd';
+import { commonAPI } from "../../api/common.api";
+import { toast } from "react-toastify";
+const { Option } = Select;
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState({});
@@ -11,8 +14,8 @@ function ProductDetail() {
   const [showError, setShowError] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
-  const [customerId, setCustomerId] = useState(1);
-
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [customers, setCustomer] = useState([]);
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -31,30 +34,35 @@ function ProductDetail() {
     fetchProduct();
   }, [id]);
 
-  const handleAddToCart = async () => {
-    // const token = localStorage.getItem("jwttoken");
-    // console.log("JWT Token for Add to Cart:", token); // Debugging line
+  useEffect(() => {
+    fetchCustomer();
+  }, []);
+
+  const fetchCustomer = async () => {
     try {
-      const response = await fetch(
-        "https://localhost:7002/api/StaffOrder/addProductToCart",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            customerId: 1, // Replace with actual customerId
-            ProductID: product.productId,
-            Quantity: quantity, // Use selected quantity
-          }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to add product to cart");
+      const response = await commonAPI.getAPI("Customer/getall");
+      setCustomer(response.data);
+    } catch (error) {
+      console.error("Error fetching Customer:", error);
+    }
+  };
+
+
+  const handleAddToCart = async () => {
+    if (!selectedCustomer){
+      toast.error("No Customer select");
+      return;
+    }
+    try {
+      const response = await commonAPI.postAPI("StaffOrder/addProductToCart", {
+        customerId: selectedCustomer, // Replace with actual customerId
+        productID: product.productId,
+        quantity: quantity, // Use selected quantity
+      });
+      if (response.status == 200){
+        navigate(`/cart/${selectedCustomer}`);
       }
-      localStorage.setItem('customerId', customerId);
-      // Redirect to /cart after successful addition
-      navigate("/cart");
+      throw new Error("Failed to add product to cart");
     } catch (error) {
       console.error("Failed to add product to cart:", error);
       setShowError(true);
@@ -84,6 +92,29 @@ function ProductDetail() {
               </h1>
               <p className="leading-relaxed">{product?.warranty}</p>
               <div className="flex items-center pb-5 mt-6 mb-5 border-b-2 border-gray-100"></div>
+              <div className="flex flex-col mb-4">
+                <label htmlFor="customer" className="mb-2 font-medium">
+                  Select Customer
+                </label>
+                <Select
+                  id="customer"
+                  showSearch
+                  placeholder="Search customers"
+                  optionFilterProp="children"
+                  value={selectedCustomer}
+                  onChange={setSelectedCustomer}
+                  filterOption={(input, option) =>
+                    option.children.toLowerCase().includes(input.toLowerCase())
+                  }
+                  className="w-full"
+                >
+                  {customers.map((customer) => (
+                    <Option key={customer.customerId} value={customer.customerId}>
+                      {customer.lastName}
+                    </Option>
+                  ))}
+                </Select>
+              </div>
               <div className="flex items-center justify-between">
                 <span className="text-2xl font-medium text-gray-900 title-font">
                   ${product?.price}

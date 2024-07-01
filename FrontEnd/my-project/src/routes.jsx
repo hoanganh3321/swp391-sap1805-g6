@@ -5,7 +5,10 @@ import MainDashboard from "./views/admin/default";
 import NFTMarketplace from "./views/admin/marketplace";
 import DataTables from "./views/admin/tables";
 import GoldPrice from "./views/admin/goldprice"
-
+import ReturnPolicyTable from "./views/admin/returnpolicy";
+import PromotionTable from "./views/admin/promotion";
+import StaffTable from "./views/admin/staff";
+import StoreTable from "./views/admin/store";
 // // Auth Imports
 // import SignIn from "views/auth/SignIn";
 
@@ -16,6 +19,10 @@ import {
   MdBarChart,
   MdPerson,
   MdLock,
+  MdPolicy,
+  MdCardGiftcard,
+  MdPeople,
+  MdStore
 } from "react-icons/md";
 
 const routes = [
@@ -48,5 +55,33 @@ const routes = [
     icon: <MdLock className="w-6 h-6" />,
     component: <GoldPrice />,
   },
+  {
+    name: "Return Policy",
+    layout: "/admin",
+    path: "returnpolicy",
+    icon: <MdPolicy className="w-6 h-6" />,
+    component: <ReturnPolicyTable />,
+  },
+  {
+    name: "Promotions",
+    layout: "/admin",
+    path: "promotion",
+    icon: <MdCardGiftcard className="w-6 h-6" />,
+    component: <PromotionTable />,
+  },
+  {
+    name: "Staff",
+    layout: "/admin",
+    path: "staff",
+    icon: <MdPeople className="w-6 h-6" />,
+    component: <StaffTable />,
+  },
+  {
+    name: "Store",
+    layout: "/admin",
+    path: "store",
+    icon: <MdStore className="w-6 h-6" />,
+    component: <StoreTable />,
+  }
 ];
 export default routes;
