@@ -84,27 +84,6 @@ const GoldPriceTable = () => {
       message.error("Failed to add gold price");
     }
   };
-
-    await axios.post(
-      "https://localhost:7002/api/GoldPriceDisplay/AddGoldPrice",
-      values,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`, // Set the Authorization header
-        },
-      }
-    );
-
-    setIsModalOpen(false);
-    fetchGoldPrices();
-    message.success("Gold price added successfully");
-  } catch (error) {
-    console.error("Error adding gold price:", error);
-    message.error("Failed to add gold price");
-  }
-};
-
-
 const handleEditGoldPrice = async (values) => {
   try {
 
