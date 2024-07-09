@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link, json, useNavigate } from 'react-router-dom';
 import { commonAPI } from "../../api/common.api";
 import { useParams } from "react-router-dom";
+import Navbar from "../navbar/Navbar";
+
 function Cart() {
   const navigate = useNavigate();
   const [total, setTotal] = useState(0);
@@ -12,7 +14,7 @@ function Cart() {
     const fetchCart = async () => {
       try {
         const response = await commonAPI.getAPI(`StaffOrder/viewCart/${customerId}`);
-        if (response.status == 200) {
+        if (response.status === 200) {
           setCarts(response.data); 
           if (response.data?.length > 0){
             setOrderDetails(response.data[0].orderDetails);  
@@ -41,7 +43,7 @@ function Cart() {
         productID: productId,
         quantity: quantity}
       );
-      if (response.status == 200) {
+      if (response.status === 200) {
         carts.forEach(x => {
           x.orderDetails = x.orderDetails.filter(item => item.productId !== productId);
         });
@@ -61,12 +63,28 @@ function Cart() {
     }
   };
 
+  const handlePay = async () => {
+    try {
+      const response = await commonAPI.postAPI(`StaffOrder/PromotionInvoice/${carts[0].orderId}`);
+      if (response.status === 200) {
+        alert('Invoice created successfully!');
+        navigate('/invoice');
+      } else {
+        throw new Error('Failed to create invoice');
+      }
+    } catch (error) {
+      console.error('Failed to create invoice:', error);
+      alert('Failed to create invoice');
+    }
+  };
+
   if (carts.length === 0) {
     return <h1 className=" h-[55vh] flex justify-center items-center text-4xl">Cart is Empty</h1>;
   }
 
   return (
     <div className="container mx-auto mt-10">
+    <Navbar/>
       <div className="flex-wrap my-10 w-3/4shadow-md">
         <div className="px-10 py-1 bg-white ">
           <div className="flex justify-between pb-8 border-b">
@@ -75,19 +93,19 @@ function Cart() {
           </div>
           <div className="flex flex-wrap mt-10 mb-5">
             <h3 className="w-2/5 text-xs font-semibold text-gray-600 uppercase">Product Details</h3>
-            {/* <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Quantity</h3> */}
+            <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Quantity</h3>
             <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Price</h3>
             <h3 className="w-1/5 text-xs font-semibold text-center text-gray-600 uppercase">Total</h3>
           </div>
           {orderDetails.map((cart) => (
-            
               <div key={cart?.orderDetailId} className="flex items-center px-6 py-5 -mx-8 hover:bg-gray-100">
                 <div className="flex w-2/5">
                   <div className="w-20">
-                    <img className="h-24" alt={cart?.productName} />
+                    <img className="h-24" src={cart?.product?.image} alt={cart?.product?.productName} />
                   </div>
                   <div className="flex flex-col justify-between flex-grow ml-4">
-                    <span className="text-sm font-bold">{cart?.productId}</span>
+                    <span className="text-sm font-bold">OrderID: {cart?.orderId}</span>
+                    <span className="text-sm font-bold">{cart?.product?.productName}</span>
                     <div
                       className="text-xs font-semibold text-gray-500 cursor-pointer hover:text-red-500"
                       onClick={() => removeProduct(cart?.productId, cart?.quantity)}
@@ -96,8 +114,9 @@ function Cart() {
                     </div>
                   </div>
                 </div>
+                <span className="w-1/5 text-sm font-semibold text-center">{cart?.quantity}</span>
                 <span className="w-1/5 text-sm font-semibold text-center">{cart?.unitPrice}</span>
-                <span className="w-1/5 text-sm font-semibold text-center">{(cart?.unitPrice * cart?.quantity).toFixed(2)}</span>
+                <span className="w-1/5 text-sm font-semibold text-center">{(cart?.unitPrice * cart?.quantity)}</span>
               </div>        
           ))}
           <Link to={'/home'} className="flex mt-10 text-sm font-semibold text-gray-900">
@@ -108,22 +127,13 @@ function Cart() {
           </Link>
         </div>
         <div id="summary" className="container w-2/4 px-8 py-10">
-          <h1 className="pb-8 text-2xl font-semibold border-b">Order Summary</h1>
-          <div className="flex flex-wrap justify-between mt-10">
-            <span className="text-sm font-semibold uppercase">Items {carts?.length}</span>
-            <span className="text-sm font-semibold">$ {total?.toFixed(2)}</span>
-          </div>
-          <div className="mt-2 py-7">
-            <label htmlFor="promo" className="inline-block text-sm font-semibold uppercase">Promo Code</label>
-            <input type="text" id="promo" placeholder="Enter your code" className="w-full p-2 text-sm" />
-          </div>
-          <button className="px-3 py-1 text-sm text-white uppercase bg-red-500 hover:bg-red-600">Apply</button>
           <div className="mt-8 border-t">
-            <div className="flex justify-between py-6 text-sm font-semibold uppercase">
-              <span>Total cost</span>
-              <span>$ {(total).toFixed(2)}</span>
-            </div>
-            <Link to='/payment' className="w-full p-2 py-3 text-sm font-semibold text-white uppercase bg-indigo-500 hover:bg-indigo-600">Pay</Link>
+            <button
+              onClick={handlePay}
+              className="w-full p-2 py-3 text-sm font-semibold uppercase text-hemp bg-bloom"
+            >
+              Pay
+            </button>
           </div>
         </div>
       </div>

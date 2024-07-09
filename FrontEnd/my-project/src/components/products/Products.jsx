@@ -26,7 +26,7 @@ const Products = () => {
   };
 
   return (
-    <div className="mb-12 mt-14">
+    <div className="mb-12 ml-20 mt-14">
       <div className="container">
         <div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 place-items-center">

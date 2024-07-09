@@ -44,31 +44,6 @@ const GoldPriceTable = () => {
       setLoading(false);
     }
   };
-//   const handleSearch = async () => {
-//     try {
-//       if (searchId.trim() === "") {
-//         fetchGoldPrices();
-//       } else {
-//         const token = "your_jwt_token_here"; // Replace with your actual JWT token
-//         const config = {
-//           headers: {
-//             Authorization: `Bearer ${token}`
-//           }
-//         };
-  
-//         const response = await axios.get(
-//           `https://localhost:7002/api/GoldPriceDisplay/GetGoldPriceById/${searchId}`,
-//           config
-//         );
-//         setGoldPrices([response.data]);
-//         setLoading(false);
-//       }
-//     } catch (error) {
-//       console.error("Error searching gold prices by ID:", error);
-//       setLoading(false);
-//     }
-//   };
-  
 
   const handleAddGoldPrice = async (values) => {
     try {
@@ -117,29 +92,7 @@ const handleEditGoldPrice = async (values) => {
       message.error("Failed to delete gold price");
     }
   };
-//   const handleDeleteGoldPrice = async (displayId) => {
-//     try {
-//       const token = "your_jwt_token_here"; // Replace with your actual JWT token
-//       const config = {
-//         headers: {
-//           Authorization: `Bearer ${token}`
-//         }
-//       };
   
-//       await axios.delete(
-//         `https://localhost:7002/api/GoldPriceDisplay/DeleteGoldPrice/${displayId}`,
-//         config
-//       );
-  
-//       fetchGoldPrices();
-//       message.success("Gold price deleted successfully");
-//     } catch (error) {
-//       console.error("Error deleting gold price:", error);
-//       message.error("Failed to delete gold price");
-//     }
-//   };
-  
-
   const handleEditModalOpen = (record) => {
     if (!record) return;
     var cloneRecord = JSON.parse(JSON.stringify(record));

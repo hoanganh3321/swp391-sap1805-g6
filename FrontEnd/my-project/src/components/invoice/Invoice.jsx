@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import { Row, Col, Table, Modal, Form, Input, Button, Popconfirm, message, DatePicker, InputNumber, Checkbox } from "antd";
 import { ExportOutlined } from '@ant-design/icons';
 import Card from "../../components/card";
@@ -72,6 +71,11 @@ const Invoice = () => {
             title: "PromotionID",
             dataIndex: "promotionId",
             key: "promotionId",
+        },
+        {
+            title: "Customer First Name",
+            dataIndex: ["order", "customer", "firstName"],
+            key: "customerFirstName",
         },
         {
             title: "PromotionName",
