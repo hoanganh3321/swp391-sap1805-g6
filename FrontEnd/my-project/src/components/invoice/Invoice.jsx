@@ -88,6 +88,7 @@ const Invoice = () => {
       title: "Customer First Name",
       dataIndex: ["order", "customer", "firstName"],
       key: "customerFirstName",
+      render: (text, record) => record.order?.customer?.firstName || "N/A",
     },
     {
       title: "PromotionName",
@@ -152,7 +153,13 @@ const Invoice = () => {
             <div class="flex justify-center font-bold text-2xl">Invoice</div>
             <div class="text-sm">Invoice ID: {invoiceData.invoiceId}</div>
             <div class="text-sm">Order ID: {invoiceData.orderId}</div>
-            <div class="text-sm">Promotion ID: {invoiceData.promotionId}</div>
+            <div className="text-sm">
+              Product Names:{" "}
+              {invoiceData.order?.orderDetails
+                ?.map((detail) => detail.product?.productName)
+                .join(", ") || "No Products"}
+            </div>
+
             <div class="text-sm">
               Promotion Name: {invoiceData.promotionName}
             </div>

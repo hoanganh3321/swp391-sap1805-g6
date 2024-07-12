@@ -85,7 +85,6 @@ const Customer = () => {
             editData.phoneNumber = values.phoneNumber;
             editData.address = values.address;
 
-            // backend đang return no content 
             await commonAPI.putAPI(`Customer/update/${editData.customerId}`, editData);
             setIsModalOpen(false);
             fetchCustomer();
@@ -137,10 +136,10 @@ const Customer = () => {
             await commonAPI.postAPI("Product/addReturnProduct", values);
             setIsModalOpenReturn(false);
             fetchCustomer();
-            message.success("Customer added successfully");
+            message.success("Product return added successfully");
         } catch (error) {
-            console.error("Error adding Customer:", error);
-            message.error("Failed to add Customer");
+            console.error("Error adding Product return:", error);
+            message.error("Failed to add Product Return");
         }
     };
 
