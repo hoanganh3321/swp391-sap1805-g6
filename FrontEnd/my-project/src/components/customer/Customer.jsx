@@ -161,8 +161,8 @@ const Customer = () => {
         },
         {
             title: "FirstName",
-            dataIndex: "fistName",
-            key: "fistName",
+            dataIndex: "firstName",
+            key: "firstName",
         },
         {
             title: "LastName",

@@ -80,8 +80,16 @@ function Cart() {
   };
 
   if (carts.length === 0) {
-    return <h1 className=" h-[55vh] flex justify-center items-center text-4xl">Cart is Empty</h1>;
+    return (
+      <div className="h-[55vh] flex flex-col justify-center items-center">
+        <h1 className="text-4xl">Cart is Empty</h1>
+        <a href="/home  " className="px-4 py-2 mt-4 text-white transition duration-300 rounded-lg shadow-md bg-bloom">
+          Continue Shopping 
+        </a>
+      </div>
+    );
   }
+  
 
   return (
     <div className="container mx-auto mt-10">

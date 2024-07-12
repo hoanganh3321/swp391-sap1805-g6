@@ -16,7 +16,7 @@ return (
                         <p class="text-base leading-6 text-hemp dark:text-hemp">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eaque reiciendis inventore iste ratione ex alias quis magni at optio</p>
                     </div>
                     <div class="mt-16 w-full">
-                        <button class="px-4 bg-bloom dark:bg-white dark:text-gray-900 flex justify-between items-center w-full lg:w-72 h-14 text-white hover:bg-gray-700 focus:ring-2 outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 dark:hover:bg-gray-100">
+                        <button class="px-4 bg-bloom flex justify-between items-center w-full lg:w-72 h-14 text-white outline-none focus:ring-2 focus:ring-offset-2">
                             <p class="text-xl font-medium leading-5 text-hemp ">See More</p>
                             <svg className="text-hemp" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.66663 16H25.3333" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
