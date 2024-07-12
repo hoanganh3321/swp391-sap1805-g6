@@ -54,7 +54,7 @@ const Footer = () => {
           <div className="px-4 py-8">
             <h1 className="flex items-center gap-3 mb-3 text-xl font-bold text-justify sm:text-3xl sm:text-left text-hemp">
               <img src={footerLogo} alt="" className="max-w-[50px]" />
-              Alumina Store
+              Blood Diamond
             </h1>
             <p>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum in

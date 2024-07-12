@@ -128,16 +128,19 @@ const PromotionTable = () => {
       title: "PromotionID",
       dataIndex: "promotionId",
       key: "promotionId",
+      align: "center",
     },
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      align: "center",
     },
     {
       title: "Start Date",
       dataIndex: "startDate",
       key: "startDate",
+      align: "center",
       render: (text, record) => (
         <span style={{ display: "flex", justifyContent: "center" }}>
           { moment(record.startDate, 'YYYY-MM-DD').format('DD/MM/YYYY')}
@@ -148,6 +151,7 @@ const PromotionTable = () => {
       title: "End Date",
       dataIndex: "endDate",
       key: "endDate",
+      align: "center",
       render: (text, record) => (
         <span style={{ display: "flex", justifyContent: "center" }}>
           { moment(record.endDate, 'YYYY-MM-DD').format('DD/MM/YYYY')}
@@ -158,11 +162,13 @@ const PromotionTable = () => {
       title: "Discount",
       dataIndex: "discount",
       key: "discount",
+      align: "center",
     },
     {
       title: "Approved",
       dataIndex: "approved",
       key: "approved",
+      align: "center",
       render: (text, record) => (
         <span style={{ display: "flex", justifyContent: "center" }}>
           {record.approved ? "True" : "False"}
@@ -173,11 +179,13 @@ const PromotionTable = () => {
       title: "Approved By",
       dataIndex: "approvedBy",
       key: "approvedBy",
+      align: "center"
     },
     {
       title: "Points",
       dataIndex: "points",
       key: "points",
+      align: "center"
     },
     {
       title: "Action",

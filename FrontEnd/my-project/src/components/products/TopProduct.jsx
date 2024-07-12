@@ -37,31 +37,35 @@ const TopProducts = ({ handleOrderPopup }) => {
             asperiores modi Sit asperiores modi
           </p>
         </div>
-        
-        <div className="grid grid-cols-1 gap-20 mb-10 sm:grid-cols-2 md:grid-cols-3 md:gap-5 place-items-center">
+        <div className="grid grid-cols-1 gap-20 mb-10 ml-22 sm:grid-cols-2 md:grid-cols-3 md:gap-5 place-items-center">
           {topProducts.map((product) => (
             <div
               key={product.id}
               data-aos="zoom-in"
-              className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group max-w-[350px]" // Increase max-width
+              className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group max-w-[300px] mt-5"
             >
-              <div className="h-[150px]"> {/* Increase height */}
+             
+              <div className="h-[100px] w-[300px]">
                 <img
                   src={product.image}
                   alt={product.productName}
-                  className="max-w-[180px] block mx-auto transform -translate-y-20 group-hover:scale-105 duration-300 drop-shadow-md" // Increase image size
+                  className="max-w-[150px] block mx-auto transform -translate-y-20 group-hover:scale-105 duration-300 drop-shadow-md"
                 />
               </div>
-              <div className="p-6 text-center"> {/* Increase padding */}
+              <div className="p-4 text-center">
+               
                 <div className="flex items-center justify-center w-full gap-1">
                   <FaStar className="text-yellow-500" />
                   <FaStar className="text-yellow-500" />
                   <FaStar className="text-yellow-500" />
                   <FaStar className="text-yellow-500" />
                 </div>
-                <h1 className="text-xl font-bold ">{product.productName}</h1>
+                <h1 className="text-xl font-bold group-hover:text-hemp">{product.productName}</h1>
+                <p className="text-sm text-gray-500 duration-300 group-hover:text-bloom line-clamp-2">
+                  {product.price}
+                </p>
                 <button
-                  className="px-6 py-2 mt-4 duration-300 rounded-full text-hemp bg-primary hover:scale-105 group-hover:bg-bloom group-hover:text-primary" // Increase button size
+                  className="px-4 py-1 mt-4 duration-300 rounded-full text-hemp bg-primary hover:scale-105 group-hover:bg-bloom group-hover:text-primary"
                   onClick={handleOrderPopup}
                 >
                   Order Now

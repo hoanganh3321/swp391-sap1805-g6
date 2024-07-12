@@ -1,34 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { FiMenu } from "react-icons/fi";
-import { AiOutlineShoppingCart } from "react-icons/ai";
+import Dropdown from "../dropdown";
 import { IoCloseOutline } from "react-icons/io5";
 import { MdOutlineNotificationsActive } from "react-icons/md";
 import clsx from "clsx";
-import axios from "axios";
 import {logout} from "../../ultils/helper";
+import avatar from "../../assets/img/avatars/avatar3.png";
 
 export default function Navbar() {
   const [isSideMenuOpen, setMenu] = useState(false);
-  const navigate = useNavigate();
-
   const navlinks = [
-    // {
-    //   label: "Sales",
-    //   link: "#",
-    // },
-    // {
-    //   label: "Products",
-    //   link: "products",
-    // },
-    // {
-    //   label: "About",
-    //   link: "#",
-    // },
-    // {
-    //   label: "Contact",
-    //   link: "#",
-    // },
     {
       label: "Invoice",
       link: "invoice"
@@ -59,7 +41,7 @@ export default function Navbar() {
             />
             {/* logo */}
             <Link to={"/home"} className="font-mono text-4xl text-bloom">
-              Alumina Store
+              Blood Diamond
             </Link>
           </section>
           {navlinks.map((d, i) => (
@@ -95,16 +77,43 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center">
-          {/* <Link to="/cart" className="mr-8 text-2xl cursor-pointer">
-            <AiOutlineShoppingCart />
-          </Link> */}
           <MdOutlineNotificationsActive className="mr-8 text-2xl cursor-pointer" />
-          {/* Nút Logout */}
-          <button 
+          {/* <button 
             onClick={handleLogout} 
             className="px-3 py-1 text-lg rounded cursor-pointer text-hemp bg-bloom">
             Logout
-          </button>
+          </button> */}
+          <Dropdown
+            button={
+              <img
+                className="w-10 h-10 rounded-full"
+                src={avatar}
+                alt="Elon Musk"
+              />
+            }
+            children={
+              <div className="flex w-56 flex-col justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
+                <div className="p-4">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-bold text-navy-700 dark:text-white">
+                      👋 Hey, Adela
+                    </p>{" "}
+                  </div>
+                </div>
+                <div className="w-full h-px bg-gray-200 dark:bg-white/20 " />
+
+                <div className="flex flex-col p-4">
+                  <a
+                    onClick={handleLogout}
+                    className="mt-3 text-sm font-medium text-red-500 transition duration-150 ease-out hover:text-red-500 hover:ease-in"
+                  >
+                    Log Out
+                  </a>
+                </div>
+              </div>
+            }
+            classNames={"py-2 top-8 -left-[180px] w-max"}
+          />
         </div>
       </nav>
       <hr className="" />

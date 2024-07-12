@@ -3,6 +3,7 @@ import axios from "axios";
 import { Table, Modal, Form, Input, Button, Popconfirm, message } from "antd";
 import Card from "../../../components/card";
 import { commonAPI } from "../../../api/common.api";
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const GoldPriceTable = () => {
   const [goldPrices, setGoldPrices] = useState([]);
@@ -110,29 +111,34 @@ const handleEditGoldPrice = async (values) => {
       title: "DisplayId",
       dataIndex: "displayId",
       key: "displayId",
+      align: "center",
     },
     {
       title: "DeviceId",
       dataIndex: "deviceId",
       key: "deviceId",
+      align: "center",
     },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
+      align: "center",
     },
     {
       title: "GoldPrice",
       dataIndex: "goldPrice",
       key: "goldPrice",
+      align: "center",
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
+      align: "center",
       render: (text, record) => (
-        <span>
-          <Button type="link" onClick={() => handleEditModalOpen(record)}>
+        <span style={{ display: "flex", justifyContent: "center" }}>
+          <Button type="link" icon={<EditOutlined />} onClick={() => handleEditModalOpen(record) }>
             Edit
           </Button>
           <Popconfirm
@@ -141,7 +147,7 @@ const handleEditGoldPrice = async (values) => {
             okText="Yes"
             cancelText="No"
           >
-            <Button type="link" danger>
+            <Button type="link" danger icon={<DeleteOutlined />}>
               Delete
             </Button>
           </Popconfirm>

@@ -120,11 +120,13 @@ const ReturnPolicyTable = () => {
       title: "PolicyID",
       dataIndex: "policyId",
       key: "policyId",
+      align: "center"
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
+      align: "center"
     },
     {
       title: "Action",

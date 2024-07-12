@@ -77,7 +77,7 @@ const Login = () => {
                             <img
                                 src={BannerImg}
                                 alt=""
-                                className="max-w-[1000px] h-[1000px] w-full object-cover object-left"
+                                className="max-w-[900px] h-[730px] w-full object-cover object-left"
                             />
                         </div>
 

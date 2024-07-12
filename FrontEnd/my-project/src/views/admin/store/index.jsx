@@ -54,21 +54,25 @@ const StoreTable = () => {
       title: "StoreId",
       dataIndex: "storeId",
       key: "storeId",
+      align: "center"
     },
     {
       title: "StoreName",
       dataIndex: "storeName",
       key: "storeName",
+      align: "center"
     },
     {
       title: "Location",
       dataIndex: "location",
       key: "location",
+      align: "center"
     },
     {
       title: "Revenue",
       dataIndex: "revenue",
-      key: "revenue"
+      key: "revenue",
+      align: "center"
     }
     
   ];

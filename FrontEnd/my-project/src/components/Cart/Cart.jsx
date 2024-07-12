@@ -3,6 +3,7 @@ import { Link, json, useNavigate } from 'react-router-dom';
 import { commonAPI } from "../../api/common.api";
 import { useParams } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
+import Footer from "../footer/FooterHomePage";
 
 function Cart() {
   const navigate = useNavigate();
@@ -137,6 +138,7 @@ function Cart() {
           </div>
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }
