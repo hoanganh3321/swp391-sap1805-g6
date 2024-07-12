@@ -62,14 +62,7 @@ const Login = () => {
                                         <Link to=''>Forgot password?</Link>
                                     </span>
                                 </div>
-                                <button className='w-full mb-1 text-[18px] mt-2 rounded-full bg-red-600 text-gray-50 shadow-lg py-2 ' type="submit">Sign in</button>
-
-
-                                <div className='text-center'>
-                                    <span>
-                                        Don't have an account? <Link to='/SignUp' className="text-brand-400 ">Sign up for free</Link>
-                                    </span>
-                                </div>
+                                <button className='w-full mb-1 text-[18px] mt-2 rounded-full bg-bloom text-gray-50 shadow-lg py-2 ' type="submit">Sign in</button>
                             </div>
                         </div>
                         {/* image section */}
@@ -77,7 +70,7 @@ const Login = () => {
                             <img
                                 src={BannerImg}
                                 alt=""
-                                className="max-w-[900px] h-[730px] w-full object-cover object-left"
+                                className="max-w-[900px] h-[800px] w-full object-cover object-left"
                             />
                         </div>
 

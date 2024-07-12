@@ -62,7 +62,7 @@ const LoginAdmin = () => {
                                         <Link to=''>Forgot password?</Link>
                                     </span>
                                 </div>
-                                <button className='w-full mb-1 text-[18px] mt-2 rounded-full bg-red-600 text-gray-50 shadow-lg py-2 ' type="submit">Sign in</button>
+                                <button className='w-full mb-1 text-[18px] mt-2 rounded-full bg-bloom text-gray-50 shadow-lg py-2 ' type="submit">Sign in</button>
 
                             </div>
                         </div>
